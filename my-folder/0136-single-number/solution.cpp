@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int singleNumber(vector<int>& nums) {
+        if(nums.size()==0) return NULL;
+        int xorEle = nums[0]; 
+        
+        for(int i = 1; i<nums.size();i++){
+            xorEle = xorEle^nums[i];
+            
+        }
+        return xorEle;
+    }
+};
