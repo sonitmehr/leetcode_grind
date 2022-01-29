@@ -1,19 +1,20 @@
 class Solution {
 public:
     int missingNumber(vector<int>& nums) {
-        vector<int> temp;
+        vector<int> v;
         int n = nums.size();
-        int sing = nums[0];
-        
-        for(int i = 0;i<n+1;i++){
-            temp.push_back(i);            
-        }int sing1 = temp[0];
+        for(int i =0;i<n+1;i++){
+            v.push_back(i);
+            
+        }
+        int xorEle = v[0];
         for(int i = 1;i<n+1;i++){
-            sing1 = sing1^temp[i];
+            xorEle = xorEle^v[i];
         }
+        int missing = nums[0];
         for(int i = 1;i<n;i++){
-            sing = sing^nums[i];
+            missing = missing^nums[i];
         }
-        return sing^sing1;
+        return missing^xorEle;
     }
 };
