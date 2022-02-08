@@ -2,26 +2,22 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        int sp[n+2];
-        int maxi = INT_MIN;
-        sp[0] = prices[0]; 
+        int cp[n+2];
+        cp[0] = prices[0]; // store initial cost of stock on Day 1. 
         
-        for(int i = 1;i<n;i++){ 
-            if(prices[i]-sp[i-1] > 0){ // profit is prices[i]-sp[i]
-                sp[i] = sp[i-1];
-                maxi = max(maxi,prices[i]-sp[i-1]);
-                
+        int maxProfit = INT_MIN;
+        
+        for(int i = 1;i<n;i++){
+            if(prices[i] - cp[i-1] > 0 ){ // IF profit is positive
+                cp[i] = cp[i-1];
+                maxProfit = max(maxProfit,prices[i] - cp[i-1]);
             }else{
-                
-                sp[i] = prices[i];
+                cp[i] = prices[i];
             }
         }
-        if(maxi == INT_MIN){
+        if(maxProfit == INT_MIN){
             return 0;
         }
-        return maxi;
-           
-    
-        
+        return maxProfit;
     }
 };
