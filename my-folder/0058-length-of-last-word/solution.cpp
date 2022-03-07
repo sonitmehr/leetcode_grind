@@ -1,21 +1,21 @@
-#include <stack>
 class Solution {
 public:
     int lengthOfLastWord(string s) {
-        int count = 0;
-        bool space = false;
         int n = s.size();
+        if(n==1)return 1;
+        int flag = 0,count=0; // 0 means word not seen yet so dont count spaces.
+        int j=n-1;
         
-        for(int i = n-1;i>=0;i--){
-            if(s[i] == ' ' && space == true){
-                break;
-            }if(isalpha(s[i])){
-                space = true;
+        while(j>=0){
+            if(isalpha(s[j])) {
+                flag = 1;
                 count++;
+                
             }
+            else if(s[j] == ' ' && flag == 1)break;
+            j--;
+            
         }
         return count;
-        
-        
     }
 };
