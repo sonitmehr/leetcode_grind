@@ -1,16 +1,15 @@
 class Solution {
 public:
     int removeElement(vector<int>& nums, int val) {
-        int lastOccuringTwo =0;
-        int k=val; 
-        int last = lastOccuringTwo;
         int n = nums.size();
+        int lastVal = 0;
+        
         for(int i = 0;i<n;i++){
-            if(nums[i]!=k){
-                nums[last] = nums[i];
-                last++;
+            if(nums[i] != val){
+                nums[lastVal] = nums[i];
+                lastVal++;
             }
-            
-        }return last;
+        }
+        return lastVal;
     }
 };
