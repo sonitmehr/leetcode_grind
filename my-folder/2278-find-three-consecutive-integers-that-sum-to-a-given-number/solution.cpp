@@ -1,15 +1,12 @@
 class Solution {
 public:
-    
-    
-    long long sum(long long n){
-        return n * (n+1)/2;
-    }
-        
     vector<long long> sumOfThree(long long num) {
+        long long x  = num;
+        
+        // (x+1) = 11;
         vector<long long> v;
-        if(num %3 !=0) return v;
-        long long x = num/3;
+        if(x%3!=0)return v;
+        x = x/3;
         v.push_back(x-1);
         v.push_back(x);
         v.push_back(x+1);
