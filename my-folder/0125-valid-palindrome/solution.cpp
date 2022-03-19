@@ -1,23 +1,22 @@
 class Solution {
 public:
     bool isPalindrome(string s) {
+        int n =s.size();
         
-               
-               
-        string correctString = "";
         
-        for (char i:s){
-            if(isdigit(i) || isalpha(i)){
-                correctString.push_back(i);
+        string s1 = "";
+        
+        for(auto i : s){
+            if(isalpha(i) || isdigit(i)){
+                s1 += tolower(i);
             }
         }
-        transform(correctString.begin(), correctString.end(), correctString.begin(), ::tolower);
-        int n = correctString.size();
-        int i = 0,j=n-1;  
+        int n1 = s1.size();
+        int i = 0,j = n1-1;
+        if(n1 == 0)return true;
+        //if(n==1)return true
         while(i<j){
-            if(correctString[i] != correctString[j]){
-                return false;
-            }
+            if(s1[i]!=s1[j])return false;
             i++;j--;
         }
         return true;
