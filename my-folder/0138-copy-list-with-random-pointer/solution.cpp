@@ -13,51 +13,43 @@ public:
     }
 };
 */
+
 class Solution {
 public:
     Node* copyRandomList(Node* head) {
         if(head == NULL)return head;
         Node* curr = head;
-        // Making zigzag pattern.
+        Node* copy;
+        
         while(curr!=NULL){
-            Node* temp = curr ->next;
-            curr -> next = new Node(curr->val);
+            Node* temp = curr->next;
+            curr -> next = new Node(curr -> val);
+            //curr -> next = copy;
             curr -> next -> next = temp;
             curr = temp;
         }
         curr = head;
-        // Assigning random in the copied.
+        //return head;
         while(curr!=NULL){
-            if(curr->next!=NULL){
-                if(curr->random!=NULL){
-                    // curr -> next -> random is random of copied list.
-                    // curr -> random -> next is random of original list.
+            if(curr -> next != NULL){
+                if(curr -> random != NULL){
                     curr -> next -> random = curr -> random -> next;
-                }
-                else curr -> next -> random = NULL;
-                
-            }
+                }else curr -> next -> random = NULL;
+            }   
             curr = curr -> next -> next;
         }
-        // Seperate the zigzag.
-        Node* orig = head;Node* copy = head -> next;
-        Node* temp1 = copy;
-        while(copy !=NULL && orig !=NULL ){
+        Node* orig = head;
+        Node* cop = head -> next;
+        Node* temp1 = cop;
+        
+        while(cop != NULL && orig != NULL){
             orig -> next = orig -> next -> next;
-            if(copy->next!=NULL)copy -> next = copy -> next -> next;
+            if(cop -> next != NULL)cop -> next = cop -> next -> next;
             orig = orig -> next;
-            copy = copy -> next;
+            cop = cop -> next;       
             
         }
+        
         return temp1;
-            
-            
-            
-            
-            
-            
-            
-            
-            
     }
 };
