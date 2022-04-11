@@ -1,22 +1,21 @@
 class Solution {
 public:
     bool validateStackSequences(vector<int>& pushed, vector<int>& popped) {
-        // NEED TO REDO - was tired
-        stack<int> s ;   // an empty stack
+        int n = pushed.size();
+        stack<int> st;
+        int i = 0;
         int j = 0;
-        for(int i= 0; i<pushed.size(); ++i)
-        {
-            s.push(pushed[i]);
-            
-			// check if pushed values is next to pe popped out.
-            while(!s.empty() && s.top() == popped[j])
-            {
-                s.pop();
-                ++j;
+        while(i<n){
+            st.push(pushed[i]);
+            i++;
+            if(st.top() == popped[j]){
+                while(!st.empty() && st.top()==popped[j]){
+                    st.pop();
+                    
+                    j++;
+                }
             }
         }
-		// if stack is empty means sequence is correct.
-        return s.empty();
+        return st.empty();
     }
 };
-
