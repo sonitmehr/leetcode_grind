@@ -1,29 +1,24 @@
 class Solution {
 public:
-    void reverse1(vector<vector<int>> &temp,vector<int> &v,vector<int> &a,int i,int n){
-    if(i ==n){
-        
-        temp.push_back(v);
-        //cout << endl;
-        return;
-
-    }v.push_back(a[i]);
-    reverse1(temp,v,a,i+1,n);
-    v.pop_back();
-    reverse1(temp,v,a,i+1,n);
-
-
-    //printf("%d ",i);
-   // printf("%d ",i);
-
-
-
+    
+    void f(vector<int> &a,int ind,int n,vector<vector<int>> &ans,vector<int> &v){
+        if(ind >=n){
+            
+            ans.push_back(v);
+            return;
+        }
+        v.push_back(a[ind]);
+        f(a,ind+1,n,ans,v);
+        v.pop_back();
+        f(a,ind+1,n,ans,v);
     }
+    
     vector<vector<int>> subsets(vector<int>& nums) {
         int n = nums.size();
-        vector<vector<int>> temp;
+        vector<vector<int>> ans;
         vector<int> v;
-        reverse1(temp,v,nums,0,n);
-        return temp;
+        f(nums,0,n,ans,v);
+        return ans;
+        
     }
 };
