@@ -1,21 +1,21 @@
 class Solution {
 public:
     bool checkInclusion(string s1, string s2) {
-        int n1 = s1.size(),n2 = s2.size();
-        if(n1 > n2)return false;
-        vector<int>a1(26,0);
-        vector<int>a2(26,0);
-        int l = 0,r= n1-1;
-        
+        int n1 = s1.size();
+        int n2 = s2.size();
+        if(n2 < n1)return false;
+        vector<int> v1(26,0),v2(26,0);
         for(int i = 0;i<n1;i++){
-            a1[s1[i]-'a']++;
-            a2[s2[i]-'a']++;
+            v1[s1[i]-'a']++;
+            v2[s2[i]-'a']++;
         }
-        for(int i = n1;i<=n2;i++){
-            if(a1==a2)return true;
-            
-            if(i!=n2)a2[s2[i]-'a']++;
-            a2[s2[l]-'a']--;
+        int l = 0;
+        int r = n1-1;
+        while(r<n2){
+            if(v1 == v2)return true;
+            r++;
+            if(r <n2)v2[s2[r]-'a']++;
+            v2[s2[l]-'a']--;
             l++;
         }
         return false;
