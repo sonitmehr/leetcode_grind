@@ -1,19 +1,21 @@
 class Solution {
 public:
     int missingNumber(vector<int>& nums) {
+        //sort(nums.begin(),nums.end());
         int n = nums.size();
-        vector<int> temp(n+1);
-        temp[0]=0;
-        int xorEle1 = temp[0];
-        for(int i = 1;i<=n;i++){
-            temp[i] = i;
-            xorEle1^=temp[i];
-            
+        int a[10001] = {0};
+        int maxi = 0;
+        
+        for(int i =0;i<n;i++){
+            a[nums[i]]++;
+            maxi = max(maxi,nums[i]);
         }
-        int xorEle = nums[0];
-        for(int i = 1;i<n;i++){
-            xorEle ^= nums[i];
+        for(int i = 0;i <=maxi;i++){
+            if(a[i] == 0)return i;
         }
-        return xorEle^xorEle1;
+        return maxi + 1;
+        
+        
     }
+    
 };
