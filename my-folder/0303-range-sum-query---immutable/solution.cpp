@@ -1,19 +1,19 @@
 class NumArray {
 public:
-    vector<int>m;
+    vector<int> temp;
     NumArray(vector<int>& nums) {
-        int s = 0;
-        m.resize(nums.size()+1);
-        for(int i = 0;i<nums.size();i++){
-            s+=nums[i];
-            m[i+1] = s;
-        }
-        
-    }            
+        temp = nums;
+    }
+    
     int sumRange(int left, int right) {
-        return m[right+1]- m[left];
+        int sum = 0;
+        for(int i = left;i<=right;i++){
+            sum += temp[i];
+        }
+        return sum;
     }
 };
+
 /**
  * Your NumArray object will be instantiated and called as such:
  * NumArray* obj = new NumArray(nums);
