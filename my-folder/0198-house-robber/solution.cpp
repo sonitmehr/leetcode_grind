@@ -1,32 +1,20 @@
 class Solution {
 public:
-    
-    int f(int i,vector<int>&dp,vector<int>&a){
-        if(i == 0)return a[0];
-        else if(i < 0)return 0;
-        if(dp[i]!=-1)return dp[i];
-        
-        int l = a[i] + f(i-2,dp,a);
-        int r = f(i-1,dp,a);
-        return dp[i] = max(l,r);
-    }
-    
-    
-    int rob(vector<int>& v) {
-        int n = v.size();        
+    int rob(vector<int>& nums) {
+        int n = nums.size();
+        if(n==1)return nums[0];
         vector<int> dp(n,-1);
-        int l = INT_MIN;
-        if(n == 1)return v[0];
-        dp[0] = v[0];
-        dp[1] = max(v[0],v[1]);
-        for(int i = 2;i<n;i++){
-            l = v[i] + dp[i-2];
-            int r = dp[i-1];
-            dp[i] = max(r,l);
+        int prev = nums[0];
+        int l = nums[1];
+        int prev2 = 0;
+        for(int i = 1;i<n;i++){
+            if(i > 1) l = nums[i] + prev2;
+            int r = prev;
+            int curri = max(l,r); 
+            prev2 = prev;
+            prev = curri;
         }
-        
-        return dp[n-1];
-        
-        
+        return prev;
     }
+        
 };
