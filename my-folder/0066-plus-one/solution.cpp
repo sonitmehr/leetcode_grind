@@ -1,24 +1,27 @@
 class Solution {
 public:
-    vector<int> plusOne(vector<int>& digits) {
-        int n= digits.size();
-        // [9] = [1,0]
-        // [7,9] = [7,0]
-        // [9,9,9,9,9,9,9,9,9] = [1,0,0]
-        // vectors.insert(v.begin(),1);
-        int i = n-1;
-        while(i>=0){
-            digits[i]++;
-            if(digits[i] == 10){
-                digits[i]=0;
-                i--;
-            }
-            else{
-                break;
-            }
+    vector<int> plusOne(vector<int>& v) {
+        int n = v.size();
+        if(n==1){
+            if(v[0] == 9)return {1,0};
+            v[0]++;
+            return v;
         }
-        if(i == -1)digits.insert(digits.begin(),1);
-        return digits;
+        int ind = n-1,flag=0;
+        while(ind >=0){
             
+            v[ind]++;
+            if(v[ind] == 10){
+                v[ind] %=10;
+                ind--;
+            }
+            else break;            
+        }
+        if(ind == -1){
+            v.insert(v.begin(),1);
+        }
+        
+        return v;
     }
 };
+// [4,3,2,1,9]
