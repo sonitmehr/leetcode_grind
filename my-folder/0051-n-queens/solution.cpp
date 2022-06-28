@@ -1,43 +1,51 @@
 class Solution {
 public:
-    // Didn't think N - Queens can rule us in this manner.
     
-    vector<vector<string>> ret;
-    bool is_valid(vector<string> &board, int row, int col){
-        // check col
-        for(int i=row;i>=0;--i)
-            if(board[i][col] == 'Q') return false;
-        // check left diagonal
-        for(int i=row,j=col;i>=0&&j>=0;--i,--j)
-            if(board[i][j] == 'Q') return false;
-        //check right diagonal
-        for(int i=row,j=col;i>=0&&j<board.size();--i,++j)
-            if(board[i][j] == 'Q') return false;
-        return true;
-    }
-    void dfs(vector<string> &board, int row){
-        // exit condition
-        if(row == board.size()){
-            ret.push_back(board);
+    
+    void f(int col,vector<string> &a,vector<vector<string>> &ds, vector<int> &left,vector<int> &upperDiagnol,vector<int> &lowerDiagnol,int n){
+        if(col == n){
+            ds.push_back(a);
             return;
         }
-        // iterate every possible position
-        for(int i=0;i<board.size();++i){
-            if(is_valid(board,row,i)){
-                // make decision
-                board[row][i] = 'Q';
-                // next iteration
-                dfs(board,row+1);
-                // back-tracking
-                board[row][i] = '.';
+        // Iterating theough each row.
+        for(int i =0;i<n;i++){
+            // Checking Hash Table.
+            if(left[i] == 0 && lowerDiagnol[i + col] == 0 && upperDiagnol[n - 1 + col - i] == 0){
+                a[i][col] = 'Q';
+                
+                left[i] = 1;        // Checking if left side is not attacked by any other queen.
+                                    // If left[i] == 0, means no queen has entered current row.
+                lowerDiagnol[i + col] = 1;
+                upperDiagnol[n-1 + col - i] = 1;
+                
+                // Call for next column recursively.
+                f(col + 1,a,ds,left,upperDiagnol,lowerDiagnol,n);
+                
+                a[i][col] = '.';  // Back track to previous condition.
+                left[i] = 0;
+                lowerDiagnol[i + col] = 0;
+                upperDiagnol[n-1 + col -i] = 0;
+                
+                
+                
             }
         }
+        
     }
+    
     vector<vector<string>> solveNQueens(int n) {
-		// return empty if n <= 0
-        if(n <= 0) return {{}};
-        vector<string> board(n,string(n,'.'));
-        dfs(board,0);
-        return ret;
+        vector<vector<string>> ds;
+        vector<string> board(n);
+        string s(n,'.');
+        
+        for(int i = 0;i<n;i++){
+            board[i] = s;
+        }
+        
+        vector<int> left(n + 1,0), upperDiagnol(2*n - 1,0),lowerDiagnol(2*n-1,0);
+        
+        f(0,board,ds,left,upperDiagnol,lowerDiagnol,n);
+        
+        return ds;
     }
 };
