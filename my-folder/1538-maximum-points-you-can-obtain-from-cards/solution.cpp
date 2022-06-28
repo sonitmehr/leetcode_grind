@@ -2,23 +2,16 @@ class Solution {
 public:
     int maxScore(vector<int>& v, int k) {
         int n = v.size();
-        int maxSum = 0;
+        if(n==1)return v[0];
+        int sum = 0;
         
-        // Assume last k elements as final answer.
-        for(int i = n- k;i<n;i++){
-            maxSum += v[i];
+        for(int i = 0;i<k;i++)sum += v[i];
+        int ptr = k-1,r = n-1,maxi = sum;
+        while(ptr >= 0){
+            sum = sum - v[ptr] + v[r];
+            maxi = max(sum,maxi);
+            ptr--;r--;
         }
-        cout << "Maxsum " << maxSum << endl;
-        
-        int l = 0,r = n - k;
-        int newSum = maxSum;
-        while(r < n){
-            maxSum = maxSum - v[r] + v[l];
-            newSum = max(newSum,maxSum);
-            l++;r++;
-            
-        }
-        return newSum;
-        
+        return maxi;
     }
 };
