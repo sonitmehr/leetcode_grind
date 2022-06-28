@@ -1,20 +1,31 @@
 class Solution {
-    
-    // DO AGAIN.
-    
-    void permute(vector<vector<int>> &res, vector<int> nums, int low) {
-        if(low == nums.size()) res.push_back(nums);
-        else{
-            for(int i = low; i < nums.size(); i++){
-                swap(nums[i], nums[low]);
-                permute(res, nums, low+1);
-            }
-        }
-    }
 public:
+    
+    void f(int ind,vector<int> &a,vector<vector<int>> &ds){
+        
+        if(ind >=a.size()){
+            ds.push_back(a);
+            return;
+        }
+        
+        for(int i = ind;i<a.size();i++){
+            swap(a[i],a[ind]);
+            f(ind+1,a,ds);
+            swap(a[i],a[ind]);
+        }
+        
+    }
+    
     vector<vector<int>> permute(vector<int>& nums) {
-        vector<vector<int>> res;
-        permute(res, nums, 0);
-        return res;
+        vector<vector<int>> ds;
+        //vector<int> v;
+        int n = nums.size();
+        
+        //map<int,bool> m;
+        
+        
+        f(0,nums,ds);
+        
+        return ds;
     }
 };
