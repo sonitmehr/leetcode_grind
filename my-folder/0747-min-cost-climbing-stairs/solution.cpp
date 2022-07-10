@@ -3,6 +3,7 @@ public:
     
     int f(int i,vector<int> &dp,vector<int> &a){
         if(i < 0 || i >= a.size())return 0;
+        
         if(i == a.size()-1)return a[i];
         
         if(dp[i]!=-1)return dp[i];
