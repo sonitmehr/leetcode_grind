@@ -11,29 +11,42 @@
  */
 class Solution {
 public:
-    // REDO Q. Trees are a pain in the ass.
-    vector<vector<int>> levelOrder(TreeNode* root) {
-        vector<vector<int>>ans;
-        if(root==NULL) return ans;//if root is NULL then return
+    
+    void print(vector<int> &v){
+        for(int i = 0;i<v.size();i++)cout << v[i] << " ";
+        cout << endl;
+    }
+    void f(TreeNode* root,int height,vector<vector<int>> &ds){
+        if(root == NULL)return;
         
-        queue<TreeNode*>q;//for storing nodes
-        q.push(root);//push root initially to the queue
-       
-        while(!q.empty()){//while queue is not empty go and follow few steps
-            vector<int>v;//for storing nodes at the same level
-            int qlen=q.size();//storing queue size for while loop
-            
-            for(int i=0;i<qlen;i++){
-                TreeNode *temp=q.front();//store front node of queue  and 
-                q.pop();//pop it from queue
-                v.push_back(temp->val);//push it to v
-                //if left subtree exist for temp then store it into the queue
-                if(temp->left!=NULL) q.push(temp->left);
-                //if right subtree exist for temp then store it into the queue
-                if(temp->right!=NULL) q.push(temp->right);
-            }
-            ans.push_back(v);//push v into answer,
+        cout << "Height " << height << " ds.size() == " << ds.size() << endl;
+        //print(v);
+        if(height == ds.size()){            
+            ds.push_back({});            
+            //v.clear();
         }
-        return ans;
+        ds[height].push_back(root->val);
+        
+        
+        f(root->left,height+1,ds);
+        f(root->right,height+1,ds);
+        
+        
+    }
+    
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> ds;
+        vector<int> v;
+        
+        if(root == NULL)return {};
+        
+        int height = 0,val = root->val;
+        ds.push_back({});
+        
+        f(root,height,ds);
+        
+        //f(root->right,v,ds,0);
+        
+        return ds;
     }
 };
