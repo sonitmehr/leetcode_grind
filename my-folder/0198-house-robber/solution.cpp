@@ -1,20 +1,37 @@
 class Solution {
 public:
-    int rob(vector<int>& nums) {
-        int n = nums.size();
-        if(n==1)return nums[0];
-        vector<int> dp(n,-1);
-        int prev = nums[0];
-        int l = nums[1];
-        int prev2 = 0;
-        for(int i = 1;i<n;i++){
-            if(i > 1) l = nums[i] + prev2;
-            int r = prev;
-            int curri = max(l,r); 
-            prev2 = prev;
-            prev = curri;
-        }
-        return prev;
-    }
+    // similar question to maximum non adjacent sum 
+    
+    int  f(int index,vector<int>& nums,vector<int>&dp)
+    {
+        if(index==0)
+            return nums[index];
         
+        if(index<0)
+        {
+            return 0;
+        }
+        
+        if(dp[index]!=-1)
+        {
+            return dp[index];
+            
+        }
+        
+        int robber= nums[index] + f(index-2,nums,dp);
+        
+        int not_robber= f(index - 1,nums,dp);
+        
+        return dp[index]= max(robber,not_robber);
+    }
+    
+    int rob(vector<int>& nums)
+    {
+        int n=nums.size();
+        vector<int>dp(n,-1);
+        return f(n-1,nums,dp);
+        
+        
+        
+    }
 };
