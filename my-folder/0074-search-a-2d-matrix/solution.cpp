@@ -1,20 +1,19 @@
 class Solution {
 public:
     bool searchMatrix(vector<vector<int>>& matrix, int target) {
-		// running a forloop till size of matrix
-        for(int i  = 0; i<matrix.size(); ++i)
-        {
-		// nested for for ietrating each row element
-            for(int j = 0; j<matrix[0].size(); ++j)
-            {
-				// if found return true
-                if(matrix[i][j] == target)
-                    return true;
+        int n = matrix.size();
+        int m = matrix[0].size();
+        
+        int temp = -1;
+        for(int i = 0;i<n;i++){
+            if(matrix[i][0] < target && matrix[i][m-1] > target)temp = i;
+            else if(matrix[i][0] == target || matrix[i][m-1] == target)return true;
+        }
+        if(temp != -1){
+            for(int i = 0;i<m;i++){
+                if(matrix[temp][i] == target)return true;
             }
         }
-		// after traversal if not found
-		// return false
-        return false;
+        return false; 
     }
-	// for github repository link go to my profile.
 };
