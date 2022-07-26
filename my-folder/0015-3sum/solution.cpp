@@ -1,31 +1,61 @@
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
-        int n = nums.size();
+    
+    vector<pair<int,int>> twoSum(vector<int>& v, int target,int l) {
         
-        vector<vector<int>>v;
-        sort(nums.begin(),nums.end());
-        for(int k=0;k<=n-3;k++){
-            int i = k+1,j = n-1,target = -1*nums[k];
-            if(k > 0 && nums[k] == nums[k-1])continue;
-            while(i<j){ 
-                if(nums[i]+nums[j]==target){
-                    v.push_back({nums[k],nums[i],nums[j]});
-                    int low = i,high = j;
-                    int last_low_occurence = nums[low] , last_high_occurence = nums[high];
-                    while(low < high && nums[low] == last_low_occurence){   
-                        low++;i++;
-                    }
-                    while(low < high && nums[high] == last_high_occurence){
-                        high--;j--;
-                    }
+        int n = v.size();
+        vector<pair<int,int>> p;
+        int i =l, r = n-1;
+        while(l < r){
+            if(v[l] + v[r] == target){
+                p.push_back({l,r});
+                
+                int L = v[l],R = v[r];
+                
+                while(l < r && v[l] == L){   
+                        l++;
                 }
-                else if(nums[i]+nums[j]>target)j--; 
-                else i++;
-            }
-        }
-        return v;
+                while(l < r && v[r] == R){
+                        r--;
+                }
+                //l++;r--;
             
-        //[-4,-1,-1,0,1,2]
+            }
+            else if(v[l] + v[r] < target)l++;
+            else r--;
+        }
+        return p; 
+            
+    }
+    
+    vector<vector<int>> threeSum(vector<int>& v) {
+        int n = v.size();
+        sort(v.begin(),v.end());
+        
+        vector<vector<int>> ans;
+        vector<pair<int,int>> p;
+        int curr;
+        for(int i= 0;i<n;i++){
+            if(v[i] == curr)continue;
+            curr = v[i];
+            p = twoSum(v,curr*-1,i+1);
+            if(p.size()){
+                for(int j = 0;j<p.size();j++){
+                    
+                    vector<int> pushIn = {v[i],v[p[j].second],v[p[j].first]};
+                    
+                    //if(ans.size() > 0 && pushIn == ans.back())continue;
+                    
+                    
+                    ans.push_back(pushIn);
+                    
+                }
+                
+
+            }
+            
+            
+        }
+        return ans;
     }
 };
