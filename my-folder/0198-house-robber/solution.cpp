@@ -1,37 +1,21 @@
 class Solution {
-public:
-    // similar question to maximum non adjacent sum 
-    
-    int  f(int index,vector<int>& nums,vector<int>&dp)
-    {
-        if(index==0)
-            return nums[index];
-        
-        if(index<0)
-        {
+    private:
+    int helper(vector<int>&nums,int index,int dp[]){
+        if(index>=nums.size()){
             return 0;
         }
-        
-        if(dp[index]!=-1)
-        {
-            return dp[index];
-            
-        }
-        
-        int robber= nums[index] + f(index-2,nums,dp);
-        
-        int not_robber= f(index - 1,nums,dp);
-        
-        return dp[index]= max(robber,not_robber);
+        //include vala case:
+        if(dp[index]!=-1)return dp[index];
+        int a=nums[index]+helper(nums,index+2,dp);
+        //exclude vala case
+        int b=helper(nums,index+1,dp);
+        dp[index]=max(a,b);
+        return dp[index];
     }
-    
-    int rob(vector<int>& nums)
-    {
-        int n=nums.size();
-        vector<int>dp(n,-1);
-        return f(n-1,nums,dp);
-        
-        
-        
+public:
+    int rob(vector<int>& nums) {
+       int dp[nums.size()+1];
+        memset(dp,-1,sizeof(dp));
+        return helper(nums,0,dp);
     }
 };
