@@ -1,22 +1,20 @@
-#include <iostream>
 class Solution {
 public:
     bool isAnagram(string s, string t) {
-        int charmap[26];
-        memset(charmap, 0, sizeof(charmap));
-        if(s.size()!=t.size()){
-            return false;
+        map<char,int> m;
+        int n1 = s.size(),n2 = t.size();
+        if(n1 != n2)return false;
+        for(int i = 0;i<n1;i++){
+            m[s[i]]++;
         }
-        for(int i = 0;i<s.size();i++){
-            charmap[s.at(i) - 'a']++;
-            charmap[t.at(i) - 'a']--;
+        for(int i = 0;i<n1;i++){
+            m[t[i]]--;
+            
         }
-        for(auto i : charmap){
-            if(i!=0){
-                return false;
-            }
+        
+        for(auto i : m){
+            if(i.second != 0)return false;
         }
         return true;
-        
     }
 };
