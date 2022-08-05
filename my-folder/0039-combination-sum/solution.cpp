@@ -1,29 +1,29 @@
 class Solution {
 public:
-    void f(vector<int> &ds,vector<int> &a,int ind,int n,int t,vector<vector<int>> &ans){
-        if(ind == n){
-            if(t == 0){
-                ans.push_back(ds);
+    void f(int i,vector<int> &a,vector<vector<int>> &ans,int target,vector<int> &v){
+        
+        //if(i >= a.size())return;
+        if(i == a.size()){
+            if(target == 0){
+                ans.push_back(v);
                 
             }
             return;
-            
         }
-        if(a[ind] <= t){
-            ds.push_back(a[ind]);
-            f(ds,a,ind,n,t-a[ind],ans);
-            ds.pop_back();
-            
-        }f(ds,a,ind+1,n,t,ans);
+        if(a[i] <= target){
+            v.push_back(a[i]);
+            f(i,a,ans,target - a[i],v);
+            v.pop_back();
+        }
+            f(i+1,a,ans,target,v);
+        
         
     }
-    
-    
-    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+    vector<vector<int>> combinationSum(vector<int>& nums, int target) {
+        vector<int> v;
         vector<vector<int>> ans;
-        vector<int> ds;
-        int n = candidates.size();
-        f(ds,candidates,0,n,target,ans);
+        f(0,nums,ans,target,v);
+        
         return ans;
     }
 };
