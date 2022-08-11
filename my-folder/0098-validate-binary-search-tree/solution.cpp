@@ -10,17 +10,23 @@
  * };
  */
 class Solution {
-private: TreeNode* perv;
 public:
-    bool isValidBST(TreeNode* root) {
-        if(root){
-            if(!isValidBST(root->left))
-                return false;
-            if(perv && root->val <= perv->val)
-                return false;
-            perv=root;
-            return isValidBST(root->right);
-        }//end if
-        return true;
+    bool f(TreeNode* root, TreeNode* &prev) {
+        if (root == NULL) return true;
+        
+        if (f(root->left, prev) == false) return false;
+        
+        if (prev != NULL && prev->val >= root->val) return false;
+        
+        prev = root;
+        
+        return f(root->right, prev);
     }
+    
+    bool isValidBST(TreeNode* root) {
+        TreeNode* prev = NULL;
+        
+        return f(root, prev);
+    }
+    
 };
