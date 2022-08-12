@@ -10,20 +10,21 @@
 
 class Solution {
 public:
-    TreeNode * bfs(TreeNode* root, TreeNode* p, TreeNode* q){
+    
+    TreeNode * f(TreeNode * root,int p,int q){
         
-        //int vp = p -> val;
-        //int vq = q -> val;
-        if(p -> val > root-> val && q -> val > root-> val )return bfs(root->right,p,q);
+        if(root == NULL)return root;
         
-        else if(p -> val < root -> val && q -> val < root -> val) return bfs(root -> left,p,q);
+        if(p > root -> val && q > root -> val)return f(root->right,p,q);
+        
+        else if(p < root -> val && q < root -> val)return f(root->left,p,q);
         
         return root;
-    }
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(p -> val == root-> val || q-> val == root->val || root == NULL)return root;
-         
+            
         
-        return bfs(root,p,q);
+    }
+    
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        return f(root,p->val,q->val);
     }
 };
