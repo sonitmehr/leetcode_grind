@@ -11,35 +11,19 @@
  */
 class Solution {
 public:
-    
-    TreeNode * f(vector<int> & v){
-        if(v.size() == 0)return NULL;
-        int mid = v.size()/2;
+    TreeNode * f(vector<int> & v,int l,int r){
+        if(l > r)return NULL;
+        int mid = (l+r)/2;
+        TreeNode * root = new TreeNode(v[mid]);
         
-        TreeNode * head = new TreeNode(v[mid]);
+        root -> left = f(v,l,mid - 1);
+        root -> right = f(v,mid + 1,r);
         
-        vector<int> left(v.begin(),v.begin() + mid);
-        vector<int> right(v.begin() + mid + 1,v.end());
-        
-        head -> left = f(left);
-        head -> right = f(right);
-        
-        return head;
-        
+        return root;
         
     }
-    
-    
-    TreeNode* sortedArrayToBST(vector<int>& v) {
-        int n = v.size();
-        if(n == 0) return NULL;
-        if(n == 1)return new TreeNode(v[0]);
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
         
-        int mid = n/2;
-        
-        
-        
-        TreeNode* head = new TreeNode(v[mid]);
-        return f(v);
+        return f(nums,0,nums.size()-1);
     }
 };
