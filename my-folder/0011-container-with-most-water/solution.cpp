@@ -3,18 +3,15 @@ public:
     int maxArea(vector<int>& v) {
         int n = v.size();
         
-        int l = 0, r = n - 1;
-        
-        int area = 0;
-    
-        while(l < r){
-            int ele = min(v[l],v[r])*(r-l);
-            area = max(area,ele); 
-            if(v[r] < v[l])r--;
+        int i = 0,j = n -1;
+        int maxi = min(v[i],v[j])*(j-i);
+        while(i < j){
             
-            else l++;
+            if(v[i] >= v[j])j--;
             
+            else i++;
+            maxi = max(min(v[i],v[j])*(j-i),maxi);
         }
-        return area;
+        return maxi;
     }
 };
