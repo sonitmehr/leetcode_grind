@@ -1,70 +1,71 @@
 class Solution {
+    unordered_map<string,int> m;
+    string b;
+    vector<vector<string>> ans;
 public:
-  unordered_set<string> dic;
-  unordered_map<string,int> mp;
-  vector<vector<string>> ans;
-    void dfs(string ew,vector<string> &temp,string bw)
-    {
-        
-        int curr=mp[ew];
-         temp.push_back(ew);
-        if(ew==bw)
-        {
-            reverse(temp.begin(),temp.end());
-           ans.push_back(temp);
-            reverse(temp.begin(),temp.end());
-            temp.pop_back();
-            return ;
+    
+    void dfs(string s,vector<string> &seq){
+        if(s == b){
+            reverse(seq.begin(),seq.end());
+            ans.push_back(seq);
+            reverse(seq.begin(),seq.end());
+            return;
         }
-        for(int i=0;i<ew.size();i++)
-        {
-            string st=ew;
-          for(char ch='a';ch<='z';ch++)
-          {
-           st[i]=ch;
-              if(mp[st] and mp[st]==curr-1)
-              { 
-                  dfs(st,temp,bw);
-              }
-         }
+        int steps = m[s];
+        for(int i = 0;i<s.size();i++){
+            char currLetter = s[i];
+
+            for(int j = 0;j<26;j++){
+                s[i] = j + 'a';
+                if(m.find(s)!=m.end() && m[s] == steps - 1){
+                    seq.push_back(s);
+                    dfs(s,seq);
+                    seq.pop_back();                    
+                }                
+            }
+            s[i] = currLetter;
         }
-        temp.pop_back();
         
     }
     
-   
- 
-    vector<vector<string>> findLadders(string bw, string ew, vector<string>& wl) {
-     
-      
-        for(auto it:wl)dic.insert(it);
+    vector<vector<string>> findLadders(string bW, string eW, vector<string>& v) {
+        int n = v.size();
+        unordered_set<string> set;
+        for(auto i : v)set.insert(i);
+        b = bW;
         queue<string> q;
-        q.push(bw);
-        mp[bw]++;
-            while(!q.empty())
-            {
-                auto k=q.front();
-                q.pop();
-                int steps=mp[k]+1;
-                for(int i=0;i<k.size();i++)
-                {
-                    string temp=k;
-                    for(char ch='a';ch<='z';ch++)
-                    {
-                        temp[i]=ch;
-                        if(dic.count(temp) and !mp[temp])
-                        {
-                            mp[temp]=steps;
-                            q.push(temp);
-                        }
-                    }
-                }   
-            }
-        if(mp[ew])
-        {
-            vector<string> temp;
-            dfs(ew,temp,bw);        }
-        return ans;
         
+        q.push(bW);
+        m[bW] = 1;
+        
+        set.erase(bW);
+        while(!q.empty()){
+            string s = q.front();
+            int steps = m[s];
+            q.pop();
+            if( s== eW)break;
+            
+            for(int i = 0;i<s.size();i++){
+                char currLetter = s[i];
+                
+                for(int j = 0;j<26;j++){
+                    s[i] = j + 'a';
+                    if(set.find(s)!=set.end()){
+                        q.push(s);
+                        set.erase(s);
+                        m[s] = steps + 1;
+                    }                
+                }
+                s[i] = currLetter;
+            }
+                        
+        }
+        if(m.find(eW) != m.end()){
+            vector<string> sequence;
+            sequence.push_back(eW);
+            dfs(eW,sequence);            
+            
+        }
+        return ans;
     }
 };
