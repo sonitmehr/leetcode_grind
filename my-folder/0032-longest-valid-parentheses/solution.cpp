@@ -1,16 +1,38 @@
 class Solution {
 public:
     int longestValidParentheses(string s) {
-	int MAX = 0;  // denotes length of maximum valid parentheses
-	stack<int> stk;
-	stk.push(-1); // bottom of stack will always hold index preceding to potential start of valid parentheses
-	for(int i = 0; i < size(s); i++)
-		if(s[i] == '(') stk.push(i);            
-		else{                
-			stk.pop();
-			if(stk.empty()) stk.push(i);
-			else MAX = max(MAX, i - stk.top());
-		}        
-	return MAX;
-}
+        
+        int n = s.size();
+        int ans = 0;
+        int open =0,close =0;
+        for(int i= 0;i<n;i++){
+            char c = s[i];
+            
+            if(s[i]=='(')open++;
+            else close ++;
+            
+            if(close > open){
+                close = 0;
+                open = 0;
+            }
+            else if(close == open){
+                ans = max(close + open,ans);
+            }            
+        }open =0,close=0;
+        for(int i=n-1;i>=0;i--){
+            char c = s[i];
+            
+            if(s[i]=='(')open++;
+            else close ++;
+            
+            if(close < open){
+                close = 0;
+                open = 0;
+            }
+            else if(close == open){
+                ans = max(close + open,ans);
+            }            
+        }
+        return ans;
+    }
 };
