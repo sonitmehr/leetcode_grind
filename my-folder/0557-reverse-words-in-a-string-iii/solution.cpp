@@ -2,18 +2,26 @@ class Solution {
 public:
     string reverseWords(string s) {
         int n = s.size();
-        int l = 0,temp;
-        if(n == 0)return s;
-        for(int i= 0;i<n;i++){
-            if(s[i] == ' ' || i == n-1){
-                int r = (i==n-1)?i:i-1;
-                //i = temp;
-                while(l<r){
-                    swap(s[l],s[r]);
-                    l++;r--;
+        int i= 0;
+        while(i < n){
+            int j;
+            
+            if(i == 0 || s[i] == ' '){
+               j = i+ 1;
+                while(j < n && s[j] != ' ')j ++;
+                
+                j--;
+                if(i!=0)i++;
+                while(i < j){
+                    swap(s[i],s[j]);
+                    i++;j--;
                 }
-                l = i+1;
+                i = j;
             }
+            
+            i++;
+            
+            
         }
         return s;
     }
