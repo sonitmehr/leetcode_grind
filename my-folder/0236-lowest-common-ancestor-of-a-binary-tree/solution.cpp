@@ -1,40 +1,29 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
 class Solution {
 public:
     
-    TreeNode* bfs(TreeNode* &root, TreeNode* p, TreeNode* q){
+    TreeNode* f(TreeNode * root,int p, int q){
+        if(root==NULL)return root;
+        if(root->val == p || root->val == q)return root;
+        TreeNode * left = f(root->left,p,q);
+        TreeNode * right = f(root->right,p,q);
         
-        //int vp = p -> val;
-        //int vq = q -> val;
-        if(root == NULL)return root;
-        
-        TreeNode * l = bfs(root->left,p,q);
-        TreeNode * r = bfs(root->right,p,q);
-        
-        if(root -> val == p-> val || root -> val == q -> val)return root;
-        if(l!=NULL and r!=NULL) return root;
-        if(l == NULL && r == NULL)return NULL;
-        
-        if(l != NULL)return l;
-        return r;
-        
-        
-        /*
-        if(!bfs(root-> left,p,q) && !bfs(root->right,p,q))return root;
-        
-        else if(bfs)
-        */
+        if(left != NULL && right != NULL)return root;
+        else if(left != NULL)return left;
+        return right;
         
         
     }
     
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        
-        
-        
-        if(p -> val == root-> val || q-> val == root->val || root == NULL)return root;
-         
-        return bfs(root,p,q);
-        
-
+        return f(root,p->val,q->val);
     }
 };
