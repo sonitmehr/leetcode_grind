@@ -1,33 +1,40 @@
 class Solution {
 public:
-    int splitArray(vector<int>& nums, int m) {
-        int n = nums.size();
+    
+    bool f(vector<int>&v,int k,int maxi){
+        int subArray = 0;
+        int n = v.size();
+        int currSum = 0;
         
-        vector<unsigned int> prefix_sum(n, 0);
-        vector<vector<unsigned int> > dp(n + 1, vector<unsigned int>(m + 1, INT_MAX));
-        prefix_sum[0] = nums[0];
-        // Step 1:
-        for(int i = 1; i < n; i++){
-            prefix_sum[i] = prefix_sum[i - 1] + nums[i];
+        for(int i = 0;i<n;i++){
+            currSum += v[i];
+            if(currSum > maxi) currSum = v[i], subArray++;
         }
+        subArray++;
+        return subArray <= k;
         
-        // Step 2, 3:
-        for(int i = 0; i < n; i++){
-            dp[i][1] = prefix_sum[i];
+        
+    }
+    
+    int splitArray(vector<int>& v, int k) {
+        int l = 0,r = 0;
+        int n =v.size();
+        for(int i= 0;i<n;i++){
+            l = max(l,v[i]);
+            r += v[i];
         }
-        
-        dp[0][0] = 0;
-        // Step 4
-        for(int i = 0; i < n; i++){
-            // check all the possible splitting mechanism
-            for(int j = 2; j <= m; j++){
-                // from 0 to i, 
-                for(int k = 0; k < i; k++){
-                    dp[i][j] = min(dp[i][j], max(dp[k][j - 1], prefix_sum[i] - prefix_sum[k]));
-                }
+        int mid;
+        int ans = r;
+        while(l<=r){
+            mid = l + (r - l)/2;
+            if(f(v,k,mid)){
+                ans = mid;
+                r = mid - 1;
             }
+            else l = mid + 1;
+            
         }
+        return ans;
         
-        return dp[n - 1][m];
     }
 };
