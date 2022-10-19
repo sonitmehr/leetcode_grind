@@ -12,24 +12,20 @@
 class Solution {
 public:
     
-    bool isSameTree(TreeNode* root,TreeNode* subRoot){
-        if(root == NULL || subRoot == NULL){
-            return root == NULL && subRoot == NULL;
+    bool f(TreeNode * root,TreeNode * subRoot){
+        if(root == NULL && subRoot == NULL)return true;
+        if(root == NULL || subRoot == NULL)return false;
         
-        }else if(root->val == subRoot -> val){
-            
-            return isSameTree(root -> left,subRoot->left) && isSameTree(root->right,subRoot->right);
-            
+        
+        else if(root->val == subRoot->val){
+            return f(root->left,subRoot->left) && f(root->right,subRoot->right);
         }
         return false;
     }
     
     bool isSubtree(TreeNode* root, TreeNode* subRoot) {
-         if(root == NULL){
-             return false;
-         }else if(isSameTree(root,subRoot)){
-             return true;
-         }
+        if(root == NULL)return false;
+        if(f(root,subRoot))return true;
         return isSubtree(root->left,subRoot) || isSubtree(root->right,subRoot);
     }
 };
