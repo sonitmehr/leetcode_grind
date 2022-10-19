@@ -1,27 +1,20 @@
 class Solution {
 public:
     vector<int> plusOne(vector<int>& v) {
+        // [2,9,9]
+        // [3,0,0]
         int n = v.size();
-        if(n==1){
-            if(v[0] == 9)return {1,0};
-            v[0]++;
-            return v;
-        }
-        int ind = n-1,flag=0;
-        while(ind >=0){
-            
-            v[ind]++;
-            if(v[ind] == 10){
-                v[ind] %=10;
-                ind--;
-            }
-            else break;            
-        }
-        if(ind == -1){
-            v.insert(v.begin(),1);
-        }
+        int i = n - 1;
         
+        while(i >=0){
+            v[i]++;
+            if(v[i] == 10){
+                v[i] = 0;
+                i--;
+            }
+            else break;
+        }
+        if(i == -1)v[0] = 1, v.push_back(0);
         return v;
     }
 };
-// [4,3,2,1,9]
