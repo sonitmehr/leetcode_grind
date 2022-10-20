@@ -1,21 +1,21 @@
 class Solution {
-    private:
-    int helper(vector<int>&nums,int index,int dp[]){
-        if(index>=nums.size()){
-            return 0;
-        }
-        //include vala case:
-        if(dp[index]!=-1)return dp[index];
-        int a=nums[index]+helper(nums,index+2,dp);
-        //exclude vala case
-        int b=helper(nums,index+1,dp);
-        dp[index]=max(a,b);
-        return dp[index];
-    }
 public:
-    int rob(vector<int>& nums) {
-       int dp[nums.size()+1];
-        memset(dp,-1,sizeof(dp));
-        return helper(nums,0,dp);
+    
+    int f(int i,int money,vector<int> &a,vector<int>&dp){
+        //if(i >= a.size())return 0;
+        if(i < 0)return 0;
+        if(i == 0){
+            return a[i];
+        }
+        if(dp[i]!=-1)return dp[i];
+        int pick = a[i] + f(i-2,money + a[i],a,dp);
+        int noPick = f(i-1,money,a,dp);
+        return dp[i] = max(pick,noPick);
+    }
+    
+    int rob(vector<int>& a) {
+        vector<int> dp(a.size(),-1);
+        
+        return f(a.size()-1,0,a,dp);
     }
 };
