@@ -1,27 +1,32 @@
 class Solution {
 public:
     
-    void f(int ind,int n,vector<int> &v,vector<int> &a,vector<vector<int>> &ds,int tar){
+    void f(int i,int sum,vector<vector<int>> &ans,vector<int> &v,vector<int>&a){
         
-        if(tar == 0){
-            ds.push_back(v);
-            return;
+        if(sum == 0){
+            ans.push_back(v);
+            return;    
+                
         }
-        for(int i = ind;i<a.size();i++){
-            if(i>ind && a[i]==a[i-1])continue;
-            if(a[i]>tar)break;
-            v.push_back(a[i]);
-            f(i + 1,n,v,a,ds,tar-a[i]);
+            
+        for(int ind = i;ind<a.size();ind++){
+            if(ind > i && a[ind] == a[ind - 1])continue;
+            if(a[ind] >sum)break;
+            v.push_back(a[ind]);
+            f(ind + 1,sum - a[ind],ans,v,a);
             v.pop_back();
+            
+                
         }
+        
         
     }
     
-    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
-        sort(candidates.begin(),candidates.end());
-        vector<vector<int>> ds;
+    vector<vector<int>> combinationSum2(vector<int>& a, int target) {
+        vector<vector<int>> ans;
+        sort(a.begin(),a.end());
         vector<int> v;
-        f(0,candidates.size(),v,candidates,ds,target);
-        return ds;
+        f(0,target,ans,v,a);
+        return ans;
     }
 };
