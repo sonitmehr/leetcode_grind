@@ -1,18 +1,29 @@
 class Solution {
 public:
-    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
-        if(image[sr][sc] == newColor)return image;
-        fill(image,sr,sc,image[sr][sc],newColor);
-        return image;
+    
+    void f(int i, int j,int startColor,int color,vector<vector<int>> &a,vector<vector<int>>&vis){
+        if(i < 0 || j < 0 || i >= a.size() || j >= a[0].size())return;
+        
+        
+        if(vis[i][j] == 0 && a[i][j] == startColor){
+            a[i][j] = color;
+            vis[i][j] = 1;
+            f(i-1,j,startColor,color,a,vis);
+            f(i+1,j,startColor,color,a,vis);
+            f(i,j-1,startColor,color,a,vis);
+            f(i,j+1,startColor,color,a,vis);
+        }
+        
+        //[[0,0,0],
+        // [0,0,0]]
+        
+        
     }
     
-    void fill(vector<vector<int>>& image, int sr, int sc, int color, int newColor){
-        if(sr<0 || sc<0 || sr >= image.size() || sc >= image[0].size() || image[sr][sc] != color) return;
+    vector<vector<int>> floodFill(vector<vector<int>>& a, int sr, int sc, int newColor) {
+        vector<vector<int>> vis(a.size(),vector<int>(a[0].size(),0));
         
-        image[sr][sc] = newColor;
-        fill(image,sr - 1,sc,color,newColor);
-        fill(image,sr + 1,sc,color,newColor);
-        fill(image,sr,sc-1,color,newColor);
-        fill(image,sr,sc+1,color,newColor);
+        f(sr,sc,a[sr][sc],newColor,a,vis);
+        return a;
     }
 };
