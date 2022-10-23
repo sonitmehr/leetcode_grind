@@ -1,20 +1,17 @@
 class Solution {
 public:
     
-    bool f(int i,int sum,vector<int> &a,vector<vector<int>> &dp){
-        if(sum == 0)return true;
-        if(i == 0){
-            if(sum == a[0])return true;
-            return false;
-        }
-        if(dp[i][sum] != -1)return dp[i][sum];
-        
-        bool noPick = f(i-1,sum,a,dp);
+    bool f(int i,int target,vector<int> &a,vector<vector<int>> &dp){
+        if(target == 0)return true;
+        if(i == 0)return (target == a[0]);
+        if(dp[i][target]!=-1)return dp[i][target];
+        bool noPick = f(i-1,target,a,dp);
         bool pick = false;
-        if(sum >= a[i]){
-            pick = f(i-1,sum - a[i],a,dp);
+        if(a[i] <= target){
+            pick = f(i-1,target -a[i],a,dp);
         }
-        return dp[i][sum] = (pick | noPick);
+        return dp[i][target]= (pick | noPick);
+        
         
     }
     
