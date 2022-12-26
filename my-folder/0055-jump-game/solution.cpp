@@ -1,19 +1,17 @@
 class Solution {
 public:
-    bool canJump(vector<int>& nums) {
-        int n = nums.size();
-        
-        int goal = n - 1 ;
-        
-        for(int i = n-1;i>=0;i--){
-            // when goal is reachable from some i;
-            if(i + nums[i] >= goal){
-                // Change goal closer to i = 0
-                
-                goal = min(goal,i);
+    bool canJump(vector<int>& v) {
+        int n = v.size();
+        int reachable = v[0];
+        if(n == 1)return true;
+        if(reachable < 1)return false;
+        for(int i = 1;i<n;i++){
+            if(reachable >= i){
+                reachable = max(reachable,i + v[i]);
             }
+            else break;
         }
-        if(goal == 0)return true;
+        if(reachable >= n -1 )return true;
         return false;
     }
 };
