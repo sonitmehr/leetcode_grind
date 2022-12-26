@@ -1,47 +1,48 @@
-class SegmentTree {
-    SegmentTree *left, *right;
-    int L, R, val;
-public:
-    SegmentTree(vector<int>& nums, int l, int r): L(l), R(r), left(NULL), right(NULL) {
-        build(nums);
-    }
-    void build(vector<int>& nums) {
-        if(L == R) val = nums[L];
-        else {
-            int mid = (L + R) / 2;
-            left = new SegmentTree(nums, L, mid);
-            right = new SegmentTree(nums, mid + 1, R);
-            val = left -> val + right -> val;
-        }
-    }
-    void update(int i, int new_val) {
-        if(L == R) val = new_val;
-        else {
-            int mid = (L + R) / 2;
-            if(i <= mid) left -> update(i, new_val);
-            else right -> update(i, new_val);
-            val = left -> val + right -> val;
-        }
-    }
-    int sum(int l, int r) {
-        if(l > r) return 0;
-        if(l == L && r == R) return val;
-        int mid = (L + R) / 2;
-        return left -> sum(l, min(mid, r)) + right -> sum(max(l, mid + 1), r);
-    }
-};
 class NumArray {
-    SegmentTree *tree;
 public:
+    vector<int> fen;
+    vector<int> nums;
+    int sum(int i){
+        int s = 0;
+        while(i > 0){
+            s += fen[i];
+            i = i - (i & (-i));
+        }
+        return s;
+    }
     NumArray(vector<int>& nums) {
-        tree = new SegmentTree(nums, 0, size(nums) - 1);
+        this->nums = nums;
+        int n = nums.size();
+        fen.resize(n+10,0);
+
+
+        for(int i = 0;i<n;i++){
+            //fen[i] = sum(nums[i]);
+            updateAfterI(i + 1,nums[i]);
+        }
+
     }
     
-    void update(int index, int val) {
-        tree -> update(index, val);
+    void update(int i, int val) {
+        int diff = val - nums[i];
+        nums[i] = val;
+        updateAfterI(i + 1,diff);
+    }
+    void updateAfterI(int i, int val) {
+        while(i <= fen.size()){
+            fen[i] += val;
+            i = i + (i & (-i));
+        }
     }
     
-    int sumRange(int left, int right) {
-        return tree -> sum(left, right);
+    int sumRange(int i, int j) {
+        return sum(j + 1) - sum(i);
     }
 };
+
+/**
+ * Your NumArray object will be instantiated and called as such:
+ * NumArray* obj = new NumArray(nums);
+ * obj->update(index,val);
+ * int param_2 = obj->sumRange(left,right);
+ */
