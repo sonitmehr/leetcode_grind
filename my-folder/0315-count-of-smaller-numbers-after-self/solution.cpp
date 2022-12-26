@@ -1,27 +1,37 @@
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
-using namespace __gnu_pbds;
-
-typedef tree <int, null_type, less_equal <int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
-
 class Solution {
 public:
-    
-    vector<int> countSmaller(vector<int>& nums) {
-        int n = nums.size();
-        pbds st;
-        
-        vector <int> vec;
-        
-        for(int i = n-1; i >= 0; i--){
-            
-            vec.push_back(st.order_of_key(nums[i]));
-            st.insert(nums[i]);
-            
+    vector<int> fen;
+    void update(int i,int add){
+        while(i <= fen.size()){
+            fen[i] += add;
+            i = i + (i & (-i));
+        }
+
+    }
+
+    int sum(int i){
+        int s = 0;
+        while(i > 0){
+            s += fen[i];
+            i = i - (i & (-i));
+
+        }
+        return s;
+    }
+    vector<int> countSmaller(vector<int>& v) {
+        int n = v.size();
+        vector<int> ans(n);
+        fen.resize(20005,0);
+        for(int i = 0;i<n;i++)v[i] += 10001;
+
+        for(int i = n-1;i>=0;i--){
+            ans[i] = sum(v[i] -1 );
+            update(v[i],1);
         }
         
-        reverse(vec.begin(), vec.end());
-        return vec;
+        return ans;
+            
+        
+
     }
 };
