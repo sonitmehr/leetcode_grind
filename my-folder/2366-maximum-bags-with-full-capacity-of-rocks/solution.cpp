@@ -1,25 +1,20 @@
 class Solution {
 public:
-    # define ll long long
-    int maximumBags(vector<int>& capacity, vector<int>& rocks, int additionalRocks) {
-        long long n = rocks.size();
-        
-        vector<int> diff(n);
-        
+    int maximumBags(vector<int>& v1, vector<int>& v2, int add) {
+        int n = v1.size();
+        vector<int>diff(n);
         for(int i = 0;i<n;i++){
-            diff[i] = capacity[i] - rocks[i];
+            diff[i] = v1[i] - v2[i];
         }
+        int cnt = 0;
         sort(diff.begin(),diff.end());
-        long long cnt = 0;
-        for(int i = 0;i<n;i++){
-            
-            if(additionalRocks < diff[i])break;
-            additionalRocks -= diff[i];
-            cnt++;
-            
+        for(int i= 0;i<n;i++){
+            if(diff[i] == 0)cnt++;
+            else if(diff[i] > 0 && diff[i] <= add){
+                cnt++;
+                add-=diff[i];
+            }
         }
         return cnt;
-            
-        
     }
 };
