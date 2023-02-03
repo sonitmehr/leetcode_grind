@@ -1,21 +1,19 @@
 class Solution {
 public:
-    
-    int f(int i,int money,vector<int> &a,vector<int>&dp){
-        //if(i >= a.size())return 0;
-        if(i < 0)return 0;
-        if(i == 0){
-            return a[i];
-        }
-        if(dp[i]!=-1)return dp[i];
-        int pick = a[i] + f(i-2,money + a[i],a,dp);
-        int noPick = f(i-1,money,a,dp);
-        return dp[i] = max(pick,noPick);
+    int dp[1001];
+    int f(int i, vector<int>&a){
+        if(i >= a.size())return 0;
+        if(i == a.size())return a[i];
+        if(dp[i] != -1)return dp[i];
+        int one = a[i] + f(i + 2,a);
+        int two = f(i+1,a);
+
+        return dp[i] = max(one,two);
+
     }
-    
-    int rob(vector<int>& a) {
-        vector<int> dp(a.size(),-1);
-        
-        return f(a.size()-1,0,a,dp);
+    int rob(vector<int>& v) {
+        memset(dp,-1,sizeof(dp));
+
+        return f(0,v);
     }
 };
