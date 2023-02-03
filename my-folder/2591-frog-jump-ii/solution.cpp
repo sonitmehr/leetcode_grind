@@ -1,20 +1,19 @@
-#define pb push_back
 class Solution {
 public:
     int maxJump(vector<int>& v) {
+        int maxi = 0;
         int n = v.size();
-        if(n == 2){
-            return max(v[0],v[1]);
+        for(int i = 0;i<n -2;i+=2){
+            int diff = abs(v[i] - v[i + 2]);
+
+            maxi = max(diff,maxi);
         }
-        vector<int> paths;
-        for(int i = 0;i<n-2;i+=2){
-            paths.pb(v[i + 2] - v[i]);
+        maxi = max(abs(v[n - 1] - v[n - 2]),maxi);
+        for(int i = 1;i<n-2;i++){
+            int diff = abs(v[i] - v[i + 2]);
+
+            maxi = max(diff,maxi);
         }
-        
-        for(int i = 1;i < n - 2;i+=2){
-            paths.pb(v[i + 2] - v[i]);
-        }
-        sort(paths.begin(),paths.end());
-        return max(v[1] - v[0],paths.back());
+        return maxi;
     }
 };
