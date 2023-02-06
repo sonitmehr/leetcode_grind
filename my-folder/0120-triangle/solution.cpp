@@ -1,20 +1,22 @@
 class Solution {
 public:
-    int f(int i,int j,vector<vector<int>>&a,vector<vector<int>>&dp){
-        if(i == a.size()-1)return a[i][j];
-        if(j < 0 || j>=a[i].size())return 1e9;
-        
+    int dp[201][201];
+    int f(int i,int j,vector<vector<int>>&a){
+        if(i >= a.size() || j >= a[i].size())return 1e9;
+
+        if(i == a.size() -1)return a[i][j];
         if(dp[i][j] != -1)return dp[i][j];
-        int l = a[i][j] + f(i+1,j,a,dp);
-        int r = a[i][j] + f(i+1,j+1,a,dp);
-        
-        return dp[i][j] = min(l,r);
-        
+        int one = a[i][j] + f(i + 1,j,a);
+        int two = a[i][j] + f(i + 1,j + 1,a);
+
+        return dp[i][j] = min(one,two);
+
+
+
     }
-    int minimumTotal(vector<vector<int>>& a) {
-        int n = a.size();
-        vector<vector<int>> dp(n+1,vector<int>(n+1,-1));
-        
-        return f(0,0,a,dp);
+
+    int minimumTotal(vector<vector<int>>& triangle) {
+        memset(dp,-1,sizeof(dp));
+        return f(0,0,triangle);
     }
 };
