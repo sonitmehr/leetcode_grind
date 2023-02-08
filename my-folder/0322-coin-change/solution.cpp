@@ -1,24 +1,23 @@
 class Solution {
 public:
-    void helper(vector<int>&coins,int amount ,vector<int>&dp ){
-    dp[0]=0;
-    for(int i=1;i<10001;i++) {
-        for(int j=0;j<coins.size();j++) {
-            if(coins[j]<=i){
-                if(dp[i-coins[j]]!=INT_MAX)
-                    dp[i]=min(dp[i],dp[i-coins[j]]+1);
-                            }
-                    }
-            }
+    int dp[20][10001];
+    int f(int i,int sum,vector<int>&a){
+        if(i >= a.size())return 1e9;
+        if(i == a.size() - 1){
+            if(sum%a[i] == 0)return sum/a[i];
+            return 1e9;
+        }
+        if(dp[i][sum] != -1)return dp[i][sum];
+
+        int one = 1e9;
+        if(sum - a[i] >= 0)one = 1 + f(i,sum - a[i],a);
+        return dp[i][sum] = min(one,f(i+1,sum,a));
+
     }
     int coinChange(vector<int>& coins, int amount) {
-        vector<int>dp(10001,INT_MAX);
-        sort(begin(coins),end(coins));
-        
-        helper(coins,amount,dp);
-        if(dp[amount]==INT_MAX){
-            return -1;
-        }
-        return dp[amount];
+        memset(dp,-1,sizeof(dp));
+       int ans =f(0,amount,coins);
+       if(ans == 1e9)return -1;
+       return ans;
     }
 };
