@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int dp[1001][1001];
+    string s1,s2;
+    int f(int i,int j){
+        if(i <0 || j < 0)return 0;
+
+        if(dp[i][j] != -1)return dp[i][j];
+        int one = 0;
+        if(s1[i] == s2[j])one = 1 + f(i - 1,j - 1);
+        return dp[i][j] = max({one,f(i - 1,j),f(i,j- 1)});
+    }
+    int minInsertions(string s) {
+        string t = s;
+        reverse(t.begin(),t.end());
+        int n = s.size();
+        s1 = s,s2 = t;
+        memset(dp,-1,sizeof(dp));
+        int sz = f(n-1,n-1);
+        //cout << sz;
+        return n - sz;
+
+    }
+};// mbadm
+//   mdabm
