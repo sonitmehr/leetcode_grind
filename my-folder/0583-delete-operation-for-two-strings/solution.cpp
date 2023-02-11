@@ -1,17 +1,21 @@
 class Solution {
 public:
-    // How is this dp
-    vector<vector<int> >dp;
-    int minDistance(string& word1, string& word2) {
-        // dp[i][j] will denote minimum steps required to equalize word1[i:end] and word[2:j:end]
-        dp.resize(size(word1) + 1, vector<int>(size(word2) + 1, 1000));
-        return solve(word1, word2, 0, 0);
+    int dp[1001][1001];
+    string s1,s2;
+    int f(int i,int j){
+        if(i <0 || j < 0)return 0;
+
+        if(dp[i][j] != -1)return dp[i][j];
+        int one = 0;
+        if(s1[i] == s2[j])one = 1 + f(i - 1,j - 1);
+        return dp[i][j] = max({one,f(i - 1,j),f(i,j- 1)});
     }
-    int solve(string &w1, string &w2, int i, int j) {
-        if(i == size(w1) && j == size(w2)) return 0;
-        if(i == size(w1) || j == size(w2)) return max(size(w1) - i, size(w2) - j);
-        if(dp[i][j] != 1000) return dp[i][j];  // directly return stored answer if already computed before
-        if(w1[i] == w2[j]) return solve(w1, w2, i + 1, j + 1);
-	return dp[i][j] = 1 + min(solve(w1, w2, i + 1, j), solve(w1, w2, i, j + 1));
+    int minDistance(string word1, string word2) {
+        memset(dp,-1,sizeof(dp));
+        s1 = word1,s2 = word2;
+        int n1 = s1.size(),n2 = s2.size();
+        int ans = f(n1-1,n2-1);
+
+        return n1 - ans + n2 - ans;
     }
 };
