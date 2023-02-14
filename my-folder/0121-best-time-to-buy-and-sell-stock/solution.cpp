@@ -2,22 +2,19 @@ class Solution {
 public:
     int maxProfit(vector<int>& v) {
         int n = v.size();
-        int i = 0,j = 1;
-        // buy low sell high
-        // i low j high
-        //if(n == 1)return v[0];
+        int left = v[0],right = v[0];
+        int i = 0;
         int maxi = 0;
-        while(j < n){
-            
-            if(v[i] < v[j]){
-                maxi = max(v[j] - v[i],maxi);
-                j++;
+        while(i < n){
+            if(v[i] < left){
+                right = v[i];
+                left = v[i];
             }
-            else if(v[i] >= v[j]){
-                i = j;
-                j++;
+            if(v[i] > right){
+                right = v[i];
             }
-            
+            maxi=max(maxi,right - left);
+            i++;
         }
         return maxi;
     }
