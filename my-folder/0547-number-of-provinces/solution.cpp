@@ -1,43 +1,37 @@
 class Solution {
 public:
-    
-    void dfs(int i,vector<int> &vis,vector<vector<int>> &adj){
-        vis[i] = 1;
+    int vis[200];
+    vector<int> adj[201];
+    void dfs(int i ){
         
-        for(int node = 0;node< adj.size();node++){
-            if(vis[node] ==0 && adj[i][node] == 1){
-                dfs(node,vis,adj);
+        for(auto node : adj[i]){
+            if(vis[node] == 0){
+                vis[node] = 1;
+                //cout << node << endl;
+                dfs(node);
             }
+            
         }
         
     }
-    
-    int findCircleNum(vector<vector<int>>& adj) {
-        int n = adj.size();
+    int findCircleNum(vector<vector<int>>& v) {
+        int  n= v.size();
         
-        
-        vector<int> vis(n + 3,0);
-        
-//         for(int i =0;i<n;i++){
-//             for(int j = 0;j<n;j++){
-//                 int a = i + 1;
-//                 int b = j + 1;
-//                 if(adj[i][j] == 1){
-//                     newAdj[a].push_back(b);
-                    
-//                 }
-//             }
-//         }
-        
-        // for(auto i : newAdj){
-        //     for(auto j : i)cout << j << " ";
-        //     cout << endl;
-        // }
-        int cnt = 0;
+
         for(int i = 0;i<n;i++){
+            for(int j = 0;j<n;j++){
+                if(v[i][j] == 1 && i!=j){
+                    adj[i + 1].push_back(j + 1);
+                }
+            }
+        }
+        int cnt = 0;
+        for(int i = 1;i<=n;i++){
             if(vis[i] == 0){
+                vis[i] = 1;
+                dfs(i);
+                //cout << i << endl;
                 cnt++;
-                dfs(i,vis,adj);
             }
         }
         return cnt;
