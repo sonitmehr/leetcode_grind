@@ -1,64 +1,52 @@
-int dx[]={1,-1,0,0};
-int dy[]={0,0,-1,1};
-
 class Solution {
 public:
+    int vis[11][11];
+    int maxi = 0;
+    bool valid(int i,int j,int n,int m){
+        if(i < 0 || j < 0 || i >= n || j >= m)return false;
+        return true;
+    }
+    void bfs(int i, int j,int n,int m,vector<vector<int>>& grid,int min){
+        
+
+    }
     int orangesRotting(vector<vector<int>>& grid) {
-        queue<pair<int,int>>q;
-        int n=grid.size();
-        int m=grid[0].size();
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                
-        //we will start from all the rotten oranges at the same time,
-        //so we will push all of them into the queue.            
-                if(grid[i][j]==2){
-                    q.push({i,j});
-                    
-        // time taken to reach a rotten orage from a rotten orage 
-        //i.e., form itself to itself is 0 .           
-                    grid[i][j]=0;
+        int n =grid.size(),m = grid[0].size();
+        queue<pair<pair<int,int>,int>> q;
+        for(int i = 0;i<n;i++){
+            for(int j = 0;j<m;j++){
+                if(grid[i][j] == 2){
+                   q.push({{i,j},0});
                 }
             }
         }
+        vector<int> a = {-1,1,0,0},
+                    b = {0,0,-1,1};
         
-        // we will work on negative values on minutes to use this value as visited
-		// as grid dosent contain any negative values.
         
-        int minutes=-1;
-        int ans=0;
         while(!q.empty()){
-            int len=q.size();
-            
-        // end of this for loop indicated 1 minutes elapsed .        
-            for(int k=0;k<len;k++){
-                int ii=q.front().first;
-                int jj=q.front().second;
-                q.pop();
-                
-        // checking all the four direction from the rotten orange .         
-                for(int i=0;i<4;i++){  
-                int row=ii+dx[i];
-                int col=jj+dy[i];
-                if(row<0 or col<0 or col>m-1 or row>n-1 or grid[row][col]<=0)
-                    continue;
-                grid[row][col]=minutes;
-                q.push({row,col});
-                ans=min(ans,grid[row][col]);
+            auto p = q.front();
+            q.pop();
+            int minutes = p.second;
+            maxi = max(maxi,minutes);
+            for(int k = 0;k<=3;k++){
+                int newI = p.first.first + a[k],newJ = p.first.second + b[k];
+                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0 && grid[newI][newJ] == 1){
+                    vis[newI][newJ] = 1;
+                    grid[newI][newJ] = 2;
+                    q.push({{newI,newJ},minutes + 1});
+                    
+                }
             }
-            }
-            minutes--;
         }
-        
-        
-        // checking if there any oranges left which is not rotten
-        for(int i=0;i<n;i++){
-            for(int j=0;j<m;j++){
-                if(grid[i][j]==1)
+        for(int i = 0;i<n;i++){
+            for(int j = 0;j<m;j++){
+                if(grid[i][j] == 1){
+                    //cout << i << " " << j << endl;
                     return -1;
+                }
             }
         }
-        
-        return -1*ans;
+        return maxi;
     }
 };
