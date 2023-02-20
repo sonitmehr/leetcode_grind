@@ -1,31 +1,53 @@
 class Solution {
 public:
-    
-    bool dfs(int i,vector<vector<int>> &adj,vector<int> &vis,vector<int> &col,int c){
-        vis[i] = 1;
-        col[i] = c;
-        
-        for(auto ii : adj[i]){
-            if(vis[ii] == 0){
-                if(dfs(ii,adj,vis,col,c^1) == false)return false;
-            }else if(col[i] == col[ii])return false;
-            
+    int color[101];
+    int vis[101];
+    vector<int> adj[101];
+    bool f(int node,int c){
+        vis[node] = 1;
+        color[node] = c;
+        for(auto i : adj[node]){
+            if(vis[i] == 0){
+                if(f(i,c^1) == false)return false;
+            }
+            else if(color[node] == color[i])return false;
         }
         return true;
     }
-    
-    
+
     bool isBipartite(vector<vector<int>>& graph) {
-        int n = graph.size();
-        vector<int> vis(n + 1,0);
-        vector<int> col(n + 1,-1);
-        int c = 0;
-        
-        
-        for(int i = 0;i <n;i++){
-            if(vis[i]==0){
-                if(dfs(i,graph,vis,col,c) == false)return false;
+        for(int i = 0;i<graph.size();i++){
+            for(auto j : graph[i]){
+                adj[i].push_back(j);
+                //adj[j].push_back(i);
             }
+            
+            
+        }
+        queue<pair<int,int>> q;
+        for(int i = 0;i<graph.size();i++){
+            if(vis[i] == 0){
+                q.push({i,0});
+
+                while(!q.empty()){
+                    auto p = q.front();
+                    q.pop();
+                    int currNode = p.first;
+                    int c = p.second;
+                    if(vis[currNode] == 1)continue;
+                    vis[currNode ] = 1;
+                    color[currNode] = c;
+                    for(auto node : adj[currNode]){
+                        if(vis[node] == 0){
+                            q.push({node,c^1});
+                        }
+                        else if(color[node ] == color[currNode]){
+                            return false;
+                        }
+                    }
+                }
+            }
+            
         }
         return true;
     }
