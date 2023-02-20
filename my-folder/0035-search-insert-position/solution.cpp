@@ -1,13 +1,17 @@
 class Solution {
 public:
-    int searchInsert(vector<int>& nums, int target) {
-        int i = 0,n=nums.size(),j=n-1,mid;;
-        while(i<=j){
-            mid = i + (j-i)/2;
-            if(nums[mid] == target)return mid;
-            else if(nums[mid] > target) j = mid-1;
-            else i = mid+1;
+    int searchInsert(vector<int>& v, int target) {
+        int n = v.size();
+        int l=  0,r = n - 1;
+        while( l <= r){
+            int mid = ( l + r)/2;
+            if(v[mid]== target)return mid;
+            if(v[mid] < target){
+                l = mid + 1;
+            }
+            else r = mid -1;
+
         }
-        return i;
+        return l;
     }
 };
