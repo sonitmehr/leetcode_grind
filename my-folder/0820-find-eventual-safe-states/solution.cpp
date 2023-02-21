@@ -1,33 +1,42 @@
 class Solution {
 public:
     int vis[10001];
-    int path[10001];
-    map<int,int> m;
-    bool f(int node,vector<vector<int>>& adj){
-        vis[node] = 1;
-        path[node] = 1;
-
-        for(auto i : adj[node]){
-            if(vis[i] == 0){
-                if(f(i,adj) == false)return false;
-            }
-            else if(path[i])return false;
-        }
-        m[node] = 1;
-        path[node] = 0;
-        return true;
-    }
+    int inDegree[10001];
+    vector<int> adjMat[10001];
     vector<int> eventualSafeNodes(vector<vector<int>>& adj) {
-        
-        for(int i = 0;i<adj.size();i++){
-            if(vis[i] == 0){
-                f(i,adj);
+        int n = adj.size();
+        for(int i = 0;i<n;i++){
+            for(auto j : adj[i]){
+                adjMat[j].push_back(i);
             }
+        }
+
+        for(int i = 0;i<n;i++){
+            for(auto j : adjMat[i]){
+                inDegree[j]++;
+            }
+        }
+        // for(int i = 0;i<n;i++){
+        //     cout << inDegree[i] <<  " ";
+        // }
+        //cout << endl;
+        queue<int> q;
+        for(int i = 0;i<n;i++){
+            if(inDegree[i] == 0){
+                //cout << i << endl;
+                q.push(i);}
         }
         vector<int> ans;
-        for(int i = 0;i<adj.size();i++){
-            if(m[i] == 1)ans.push_back(i);
+        while(!q.empty()){
+            auto p = q.front();
+            q.pop();
+            ans.push_back(p);
+            for(auto i : adjMat[p]){
+                inDegree[i] --;
+                if(inDegree[i] == 0)q.push(i);
+            }
         }
+        sort(ans.begin(),ans.end());
         return ans;
     }
 }; 
