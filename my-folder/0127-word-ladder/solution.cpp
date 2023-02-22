@@ -1,37 +1,38 @@
 class Solution {
 public:
-    
-    int ladderLength(string bW, string eW, vector<string>& v) {
-        int n = v.size();
-        unordered_set<string> set;
-        for(auto i : v)set.insert(i);
-        
+    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> st;
+        for(auto i : wordList)st.insert(i);
         queue<pair<string,int>> q;
-        
-        q.push({bW,1});
-        set.erase(bW);
+        q.push({beginWord,1});
+        int mini = 1e9;
         while(!q.empty()){
-            string s = q.front().first;
-            int steps = q.front().second;
+            auto p = q.front();
             q.pop();
-            if(s == eW)return steps;
-            string t;
-            for(int i = 0;i<s.size();i++){
-                char currLetter = s[i];
-                // hit
-                for(int j = 0;j<26;j++){
-                    s[i] = j + 'a';
-                    if(set.find(s)!=set.end()){
-                        q.push({s,steps+1});
-                        set.erase(s);
-                    }                
+            string currWord = p.first;
+            int length = p.second;
+            if(currWord == endWord)mini =min(mini,length);
+            for(int k = 0;k<currWord.size();k++){
+                char ignore = currWord[k];
+                char store = currWord[k];
+                for(char c = 'a';c <= 'z';c++){
+                    if(c != ignore){
+                        
+                        currWord[k] = c;
+                        if(st.find(currWord) != st.end()){
+                            q.push({currWord,length + 1});
+                            st.erase(currWord);
+                        }
+                        
+                    }
                 }
-                s[i] = currLetter; 
-
+                currWord[k] = store;
             }
             
         }
-        return 0;
+        if(mini == 1e9)return 0;
+        return mini;
         
+
     }
 };
