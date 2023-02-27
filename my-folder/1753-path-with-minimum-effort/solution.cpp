@@ -1,37 +1,44 @@
-#define pii pair<int, pair<int,int>>
-
+#define pii pair<pair<int,int>,pair<int,int>>
 class Solution {
 public:
-    //Directions (top, right, bottom, left)
-    const int d4x[4] = {-1,0,1,0}, d4y[4] = {0,1,0,-1};
-    
-    int minimumEffortPath(vector<vector<int>>& h) {
-        int n = h.size(), m = h[0].size();
-        //min-heap
-        priority_queue <pii, vector<pii>, greater<pii>> pq;
-        //to store distances from (0,0)
-        vector<vector<int>> dis(n,vector<int>(m,INT_MAX));
-        dis[0][0] = 0;
-        pq.push({0, {0, 0}});
-        
-        //Dijstra algorithm
-        while(!pq.empty()) {
-            pii curr = pq.top(); pq.pop();
-            int d = curr.first, r = curr.second.first, c = curr.second.second;
-            // bottom right position
-            if(r==n-1 && c==m-1) return d;
-            for(int i=0; i<4; ++i) {
-                int nx = r+d4x[i], ny = c+d4y[i];
-                //check if new position is invalid
-                if(nx < 0 || nx >= n || ny < 0 || ny >= m)continue;
-                int nd = max(d, abs(h[nx][ny] - h[r][c]));
-                if (nd < dis[nx][ny]) {
-                    dis[nx][ny] = nd;
-                    pq.push({nd, {nx, ny}});
-                }
+    int vis[101][101];
+    bool valid(int i, int j,int n,int m){
+        if(i < 0 || i >=n || j < 0 || j>=m)return false;
+        return true;
+    }
+    int minimumEffortPath(vector<vector<int>>& mat) {
+        int n = mat.size(),m = mat[0].size();
+        vector<int> a = {-1,1,0,0}, b = {0,0,1,-1};
+        priority_queue<pii,vector<pii>,greater<pii>> q;
+        //if(mat[0][0] == 1)return -1;
+        q.push({{0,mat[0][0]},{0,0}});
+        int mini = 1e9;
+        while(!q.empty()){
+            auto p = q.top();
+            q.pop();
+
+            int dist = p.first.first;
+            int prev = p.first.second;
+            int i = p.second.first;
+            int j = p.second.second;
+            if(i == n - 1 && j == m - 1){
+                mini = min(mini,dist);
+                continue;
             }
+            if(vis[i][j] == 1)continue;
+            vis[i][j] = 1;
+            for(int k = 0;k<=3;k++){
+                int newI = i + a[k],newJ = j + b[k];
+                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0){
+                    int diff = abs(mat[newI][newJ] - prev);
+                    diff = max(diff,dist);
+                    // cout << newI << " " << newJ << " " << diff << endl;
+                    q.push({{diff,mat[newI][newJ]},{newI,newJ}});
+                }
+
+            }
+            
         }
-        return 0;
-        //please upvote
+        return mini;
     }
 };
