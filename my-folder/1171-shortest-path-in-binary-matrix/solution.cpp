@@ -1,39 +1,41 @@
+#define pii pair<int,pair<int,int>>
 class Solution {
 public:
-    // Helper function to check if point is in grid
-    bool isValidPoint(int x, int y, int n, int m) {
-        return x >= 0 && x <= n && y >= 0 && y <= m;
-    }
-    
-    int shortestPathBinaryMatrix(vector<vector<int>>& grid) {
-        int n = grid.size()-1, m = grid[0].size()-1;
-        if (grid[0][0] || grid[n][m]) 
-            return -1;
-        
-        queue<vector<int> > q;
-        vector<int> curr;
-        
-        q.push({0, 0});
-        grid[0][0] = 1;
-        
-        while (!q.empty() && !grid[n][m]) {
-            curr = q.front();
+    int vis[101][101];
+    bool valid(int i, int j,int n,int m){
+        if(i < 0 || i >=n || j < 0 || j>=m)return false;
+        return true;
+    }/*
+    [1,0,0],
+    [1,1,0],
+    [1,1,0]
+    */
+    int shortestPathBinaryMatrix(vector<vector<int>>& mat) {
+        int n = mat.size(),m = mat[0].size();
+        vector<int> a = {-1,-1,-1,1,1,1,0,0}, b = {0,-1,1,0,-1,1,-1,1};
+        priority_queue<pii,vector<pii>,greater<pii>> q;
+        if(mat[0][0] == 1)return -1;
+        q.push({1,{0,0}});
+        while(!q.empty()){
+            auto p = q.top();
             q.pop();
-            
-            for (int i = 0; i < 8; i++) {
-                int x = curr[0] + x_points[i];
-                int y = curr[1] + y_points[i];
-                
-                if (isValidPoint(x, y, n, m) && grid[x][y] == 0) {
-                    grid[x][y] = grid[curr[0]][curr[1]] + 1;
-                    q.push({x, y});
+
+            int dist = p.first;
+            int i = p.second.first;
+            int j = p.second.second;
+            if(i == n - 1 && j == m - 1)return dist;
+            if(vis[i][j] == 1)continue;
+            vis[i][j] = 1;
+            for(int k = 0;k<=7;k++){
+                int newI = i + a[k],newJ = j + b[k];
+                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0 && mat[newI][newJ] == 0){
+                    q.push({dist + 1,{newI,newJ}});
                 }
+
             }
+            
         }
-        return grid[n][m] ? grid[n][m] : -1;
+        return -1;
+        
     }
-    
-private:
-    vector<int> x_points = {-1,-1,-1,0,0,1,1,1};
-    vector<int> y_points = {-1,0,1,-1,1,-1,0,1};
 };
