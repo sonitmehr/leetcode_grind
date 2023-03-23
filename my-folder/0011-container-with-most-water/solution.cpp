@@ -2,16 +2,18 @@ class Solution {
 public:
     int maxArea(vector<int>& v) {
         int n = v.size();
-        
-        int i = 0,j = n -1;
-        int maxi = min(v[i],v[j])*(j-i);
-        while(i < j){
+        int l = 0, r = n - 1;
+        int maxi = 0;
+        while(l < r){
+            maxi = max(maxi,min(v[l],v[r])*(r - l));
+            if(v[l] <= v[r]){
+                l++;
+            }
+            else r--;
             
-            if(v[i] >= v[j])j--;
-            
-            else i++;
-            maxi = max(min(v[i],v[j])*(j-i),maxi);
         }
+        maxi = max(maxi,min(v[l],v[r])*(r - l));
         return maxi;
+
     }
 };
