@@ -1,35 +1,35 @@
 class Solution {
 public:
 
-    int maxCrossingSum(vector<int>& nums,int l,int mid,int r){
+    int crossingSum(vector<int> &v,int l,int m,int r){
+        int left_sum = -1e9;
         int sum = 0;
-        int left_sum = -1e9,right_sum = -1e9;
-        for(int i = mid;i>= l;i--){
-            sum += nums[i];
-            left_sum = max(left_sum,sum);
+        for(int i = m;i>=l;i--){
+            sum += v[i];
+            left_sum = max(sum,left_sum);
         }
         sum = 0;
-        for(int i = mid;i<=r;i++){
-            sum += nums[i];
-            right_sum = max(right_sum,sum);
+        int right_sum = -1e9;
+        for(int i = m;i<=r;i++){
+            sum += v[i];
+            right_sum = max(sum,right_sum);
         }
-        return max({left_sum,right_sum,left_sum + right_sum - nums[mid]});
+        return max({left_sum,right_sum,left_sum + right_sum - v[m]});
     }
 
-    int f(vector<int>&nums,int l,int r){
-        if(l > r)return -1e9;
-        if(l == r)return nums[l];
+    int f(vector<int> &v,int l,int r){
+        if(r < l) return -1e9;
+        if(r == l) return v[l];
 
         int m = (l + r)/2;
 
-        return max({f(nums,l,m - 1),f(nums,m + 1,r),maxCrossingSum(nums,l,m,r)});
+        return max({f(v,l,m-1),f(v,m + 1,r),crossingSum(v,l,m,r)});
+
 
     }
-
 
 
     int maxSubArray(vector<int>& nums) {
-        return f(nums,0,nums.size() - 1);
+        return f(nums,0,nums.size()-1);
     }
-    
 };
