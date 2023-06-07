@@ -3,18 +3,14 @@ public:
     int maxProfit(vector<int>& v) {
         int n = v.size();
         int left = v[0],right = v[0];
-        int i = 0;
+        int i = 0,j = 1;
         int maxi = 0;
-        while(i < n){
-            if(v[i] < left){
-                right = v[i];
-                left = v[i];
+        while(j < n){
+            if(v[j] <= v[i]){
+                i = j;
             }
-            if(v[i] > right){
-                right = v[i];
-            }
-            maxi=max(maxi,right - left);
-            i++;
+            maxi = max(maxi,v[j] - v[i]);
+            j++;
         }
         return maxi;
     }
