@@ -1,61 +1,49 @@
 class Solution {
 public:
-    
-    vector<pair<int,int>> twoSum(vector<int>& v, int target,int l) {
-        
-        int n = v.size();
-        vector<pair<int,int>> p;
-        int i =l, r = n-1;
-        while(l < r){
-            if(v[l] + v[r] == target){
-                p.push_back({l,r});
-                
-                int L = v[l],R = v[r];
-                
-                while(l < r && v[l] == L){   
-                        l++;
-                }
-                while(l < r && v[r] == R){
-                        r--;
-                }
-                //l++;r--;
-            
-            }
-            else if(v[l] + v[r] < target)l++;
-            else r--;
-        }
-        return p; 
-            
-    }
-    
-    vector<vector<int>> threeSum(vector<int>& v) {
-        int n = v.size();
-        sort(v.begin(),v.end());
-        
-        vector<vector<int>> ans;
-        vector<pair<int,int>> p;
-        int curr;
-        for(int i= 0;i<n;i++){
-            if(v[i] == curr)continue;
-            curr = v[i];
-            p = twoSum(v,curr*-1,i+1);
-            if(p.size()){
-                for(int j = 0;j<p.size();j++){
-                    
-                    vector<int> pushIn = {v[i],v[p[j].second],v[p[j].first]};
-                    
-                    //if(ans.size() > 0 && pushIn == ans.back())continue;
-                    
-                    
-                    ans.push_back(pushIn);
-                    
-                }
-                
 
+    vector<pair<int,int>> twoSum(vector<int> &v,int target,int l){
+        int n = v.size();
+        int i = l,j = n - 1;
+        vector<pair<int,int>> p;
+        while(i < j){
+            int sum = v[i] + v[j];
+            if(sum == target){
+                p.push_back({i,j});
+                int L = v[i],R = v[j];
+                while(i < j && v[i] == L)i++;
+                while(i < j && v[j] == R)j--;
             }
-            
+            else if(sum < target)i++;
+            else j--;
+        }
+        return p;
+
+    }
+
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        
+        sort(nums.begin(),nums.end());
+        int curr = -1e6;
+         int n = nums.size();
+        vector<vector<int>> ans;
+        for(int i= 0;i<n;i++){
+            if(curr == nums[i])continue;
+            curr = nums[i];
+
+            auto p = twoSum(nums,-curr,i+1);
+
+            for(int j = 0;j<p.size();j++){
+                auto pp = p[j];
+                ans.push_back({curr,nums[pp.first],nums[pp.second]});
+            }
+
             
         }
         return ans;
+
+
+
+
+
     }
 };
