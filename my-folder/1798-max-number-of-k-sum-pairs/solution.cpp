@@ -1,17 +1,23 @@
 class Solution {
 public:
-    int maxOperations(vector<int>& nums, int sum) {
-        unordered_map<int,int> freq;
-        for(int e: nums) freq[e]++;
+    int maxOperations(vector<int>& v, int k) {
+        int n = v.size();
+
+        map<int,int> m;
+        for(auto &i : v)m[i] ++;
         int ans = 0;
-        for(auto& [k,v]: freq){
-            if(2*k == sum) ans += v / 2, v -= v/2*2; 
-            else if(v > 0 && freq.count(sum-k) && freq[sum-k] > 0) {                
-                int pair_cnt = min(v, freq[sum-k]);
-                ans += pair_cnt;
-                v -= pair_cnt;
-                freq[sum-k] -= pair_cnt;                
-            }            
+        for(auto &i : m){
+            int one = i.first;
+            int two = k - one;
+            if(m[two] > 0){
+                int minus = min(i.second,m[two]);
+                if(one == two){
+                    minus/=2;
+                }
+                ans += minus;
+                m[one] -= minus;
+                m[two] -= minus;
+            }
         }
         return ans;
     }
