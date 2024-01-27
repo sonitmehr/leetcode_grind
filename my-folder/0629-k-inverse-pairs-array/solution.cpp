@@ -1,22 +1,60 @@
 class Solution {
 public:
-    int MOD = 1e9 + 7;
-    
-    long f(int n,int k,vector<vector<int>> &dp){
-        if(k ==0 )return 1;
-        if(k < 0)return 0;
-        if(n <= 0)return 0;
-        
-        if(dp[n][k]!=-1) return dp[n][k];
-        
-        long long sum = (f(n-1, k,dp) + f(n, k-1,dp)- f(n-1, k-n,dp) + MOD)%MOD;
-        
-        return dp[n][k] = sum%MOD;
-        
+
+    int dp[1001][1001];
+    int mod = 1e9 + 7;
+    int solve(int n,int k){
+        if(n == 0)return 0;
+        if(k == 0)return 1;
+
+        if(dp[n][k] != -1)return dp[n][k];
+        int count = 0;
+        for(int i = 0;i<=min(n-1,k);i++){
+             count = (count + solve(n - 1,k - i)) % mod;
+        }
+        return dp[n][k] = count;
+
+
     }
-    
-    int kInversePairs(int n, int k) {
-        vector<vector<int>> dp(n+1,vector<int>(k+1,-1));
-        return f(n,k,dp);
+
+    int kInversePairs(int N, int K) {
+        // memset(dp,0,sizeof(dp));
+        // Tabulation but same time complexity
+        // for(int n = 1;n<=N;n++){
+        //     for(int k = 0;k<=K;k++){
+        //         if(k==0){
+        //             dp[n][k] = 1;
+        //             continue;
+        //         }
+
+        //         for(int i = 0;i<=min(k,n-1);i++){
+        //             dp[n][k] = (dp[n][k] + dp[n-1][k-i])%mod;
+        //         }
+
+        //     }
+        // }
+        // return dp[N][K];
+
+        // Reducing time complexity
+        memset(dp,0,sizeof(dp));
+        dp[0][0] = 1;
+        for(int n = 1;n<=N;n++){
+            for(int k = 0;k<=K;k++){
+                if(k == 0){
+                    dp[n][k] = 1;
+                    continue;
+                }
+
+                dp[n][k] = (dp[n - 1][k] + dp[n][k - 1]) % mod;
+                if(k >= n){
+                    dp[n][k] = (dp[n][k] - dp[n - 1][k - n] + mod) %mod;
+                }
+            }
+        }
+        return dp[N][K];
+
+
+
+        // return solve(n,k);
     }
 };
