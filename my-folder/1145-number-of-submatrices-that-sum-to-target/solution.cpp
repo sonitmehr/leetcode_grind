@@ -1,39 +1,35 @@
 class Solution {
 public:
-    
-    int f(vector<int>&nums,int k)
-    {
-         unordered_map<int,int>m;
-         int sum=0;
-         int ans=0;
-         for(int i=0;i<nums.size();++i)
-         {
-             sum+=nums[i];
-             
-             if(sum==k)ans++; 
-             
-             if(m.find(sum-k)!=m.end())ans+=m[sum-k];
-             
-             m[sum]++;
-         }
-         return ans;
-    }
-    
-    int numSubmatrixSumTarget(vector<vector<int>>& a, int t) {
-        int cnt=0;
-        int n = a.size();
-        int m = a[0].size();
-        for(int i=0;i<a.size();i++){   
-            vector<int> v(m,0);
-            for(int ii =i;ii<a.size();ii++){
-                
-                for(int j=0;j<a[0].size();j++){
-                    v[j]+=a[ii][j];
-                }
-                cnt+=f(v,t);
+    int numSubmatrixSumTarget(vector<vector<int>>& mat, int target) {
+        int n = mat.size();
+        int m = mat[0].size();
+
+        for (int row = 0; row < n; row++) {
+            for (int col = 1; col < m; col++) {
+                mat[row][col] += mat[row][col - 1];
             }
         }
+        /*
+        [[ 1,  1, 1],
+         [-1, -1, 1],
+         [ 1,  1,-1]],
 
-        return cnt;
+
+        */
+        unordered_map<int, int> mp;
+        int ans = 0;
+        for (int colStart = 0; colStart < m; colStart++) {
+            for (int colEnd = colStart; colEnd < m; colEnd++) {
+                mp.clear();
+                mp[0] = 1;
+                int currSum = 0;
+                for (int i = 0; i < n;i ++){
+                    currSum += mat[i][colEnd] - (colStart ? mat[i][colStart - 1] : 0);
+                    ans += mp[currSum - target];
+                    mp[currSum] ++;
+                }
+            }
+        }
+        return ans;
     }
 };
