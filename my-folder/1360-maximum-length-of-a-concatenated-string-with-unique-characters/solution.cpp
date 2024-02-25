@@ -1,67 +1,67 @@
 class Solution {
 public:
-    void convertToBits(unordered_set<int>& uniqueBits, vector<string>& arr) {
 
-        // This function will convert each string to its corresponding version
-        // in bits form
-        for (auto& i : arr) {
-            int stringToBit = 0;
-            bool flag = true;
-            for (auto& c : i) {
-                int charToBit = (1 << (c - 'a'));
-                // If the string itself has a repeating character then dont take
-                // it in unordered_set
-                if (stringToBit & charToBit) {
-                    flag = false;
-                    continue;
-                }
-                // If no repeating character create its bit mapping
-                stringToBit |= charToBit;
-            }
-            // If we reach here then means that the string is good
-            // Store the length of this string after the 26 characters.
-            if (flag) {
+    void convertToBits(string s,unordered_set<int> &uniqueBits){
+        int stringToBit = 0;
+        bool flag = true;
+        for(char &c : s){
+            int charToBit = (1 << (c - 'a'));
 
-                int stringToBitLen = i.size() << 26;
-                stringToBit |= stringToBitLen;
-                uniqueBits.insert(stringToBit);
+            if(stringToBit & charToBit){
+                flag = false;
+                continue;
             }
+            stringToBit |= charToBit;
         }
+        if(flag){
+            int len = (s.size() << 26);
+            stringToBit |= len;
+            uniqueBits.insert(stringToBit);
+            
+        }
+
     }
 
-    int solve(vector<int>& uniqueVec, int i, int result) {
-        // oldResult stores the first 26 characters from result
-        int oldResult = result & ((1 << 26) - 1);
-        int oldResultLen = result >> 26;
-        int best = oldResultLen;
-        if (i >= uniqueVec.size())
-            return best;
+        
+    int solve(int i,int oldResult,vector<int> &uniqueBits){
 
-        // newResult stores the first 26 characters of the new element.
-        int newResult = uniqueVec[i] & ((1 << 26) - 1);
-        int newResultLen = uniqueVec[i] >> 26;
-
-        // Check if any repetition after merging
-        int mergedResult = (oldResult & newResult);
-
-        if (mergedResult == 0) { // Means there is no repetition.
-            int newValue = oldResult | newResult;
-            int newValueLength = oldResultLen + newResultLen;
-
-            int newValueWithLength = newValue | (newValueLength << 26);
-
-            best = solve(uniqueVec, i + 1, newValueWithLength);
+        int oldValue = oldResult & ((1 << 26) - 1);
+        int oldValueLen = oldResult >> 26;
+        int best = oldValueLen;
+        if(i >= uniqueBits.size()){
+            return oldValueLen;
         }
-        best = max(best, solve(uniqueVec, i + 1, result));
+
+        int newValue = uniqueBits[i] & ((1 << 26) - 1);
+        int newValueLen = uniqueBits[i] >> 26;
+
+        int mergedResult = oldValue & newValue;
+        
+        if(mergedResult == 0){
+            int mergedResultLen = oldValueLen + newValueLen;
+
+            int mergedResultWithLen = (oldValue | newValue) | (mergedResultLen << 26);
+
+            best = solve(i + 1,mergedResultWithLen,uniqueBits);
+        }
+
+        best = max(best,solve(i + 1,oldResult,uniqueBits));
         return best;
+
+
     }
 
     int maxLength(vector<string>& arr) {
-        unordered_set<int> uniqueBits;
-        convertToBits(uniqueBits, arr);
-        vector<int> uniqueVec(uniqueBits.begin(), uniqueBits.end());
+        
+        unordered_set<int> uniqueBit;
+        for(auto &a : arr){
+            convertToBits(a,uniqueBit);
+        }
 
-        // result = 0 initially as our string is empty. with length = 0
-        return solve(uniqueVec, 0, 0);
+        
+        vector<int> uniqueBits(uniqueBit.begin(),uniqueBit.end());
+        
+        return solve(0,0,uniqueBits);
+
     }
 };
