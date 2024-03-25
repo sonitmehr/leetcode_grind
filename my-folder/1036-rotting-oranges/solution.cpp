@@ -1,52 +1,54 @@
 class Solution {
 public:
-    int vis[11][11];
-    int maxi = 0;
-    bool valid(int i,int j,int n,int m){
-        if(i < 0 || j < 0 || i >= n || j >= m)return false;
+    int maxTime = 0;
+    vector<int> newI = {1,-1,0,0};
+    vector<int> newJ = {0,0,1,-1};
+    int rottenOranges = 0;
+    bool check(int new_i,int new_j,int n,int m){
+        if(new_i >= n || new_j >= m || new_i < 0 || new_j < 0)return false;
         return true;
     }
-    void bfs(int i, int j,int n,int m,vector<vector<int>>& grid,int min){
-        
 
-    }
-    int orangesRotting(vector<vector<int>>& grid) {
-        int n =grid.size(),m = grid[0].size();
-        queue<pair<pair<int,int>,int>> q;
-        for(int i = 0;i<n;i++){
-            for(int j = 0;j<m;j++){
-                if(grid[i][j] == 2){
-                   q.push({{i,j},0});
-                }
-            }
-        }
-        vector<int> a = {-1,1,0,0},
-                    b = {0,0,-1,1};
-        
-        
+    void bfs(queue<pair<pair<int,int>,int>> &q,int n,int m,vector<vector<int>>& grid){
         while(!q.empty()){
-            auto p = q.front();
+            auto curr = q.front();
             q.pop();
-            int minutes = p.second;
-            maxi = max(maxi,minutes);
-            for(int k = 0;k<=3;k++){
-                int newI = p.first.first + a[k],newJ = p.first.second + b[k];
-                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0 && grid[newI][newJ] == 1){
-                    vis[newI][newJ] = 1;
-                    grid[newI][newJ] = 2;
-                    q.push({{newI,newJ},minutes + 1});
-                    
+
+            int time = curr.second;
+            int currI = curr.first.first;
+            int currJ = curr.first.second;
+            maxTime = max(maxTime,time);
+            for(int k = 0;k<4;k++){
+                int new_i = currI + newI[k];
+                int new_j = currJ + newJ[k];
+
+                if(check(new_i,new_j,n,m) && grid[new_i][new_j] == 1){
+                    q.push({{new_i,new_j},time + 1});
+                    grid[new_i][new_j] = 2;
+                    rottenOranges ++;
                 }
             }
+
         }
+    }
+
+    int orangesRotting(vector<vector<int>>& grid) {
+        int n = grid.size(),m = grid[0].size();
+        queue<pair<pair<int,int>,int>> q;
+
+        int totalOranges = 0;
         for(int i = 0;i<n;i++){
             for(int j = 0;j<m;j++){
-                if(grid[i][j] == 1){
-                    //cout << i << " " << j << endl;
-                    return -1;
-                }
+               if(grid[i][j] == 2){
+                    q.push({{i,j},0});
+               }
+               if(grid[i][j] == 1)totalOranges++;
             }
+
         }
-        return maxi;
+        bfs(q,n,m,grid);
+        
+        return totalOranges == rottenOranges ? maxTime : -1;
+
     }
 };
