@@ -1,27 +1,41 @@
 class Solution {
 public:
-    int vis[51][51];
-    bool valid(int i,int j,int n,int m){
-        if(i < 0 || j < 0 || i >= n || j >= m)return false;
+
+    bool check(int x,int y,int n,int m){
+        if( x >= n || y >= m || x < 0 || y< 0)return false;
         return true;
     }
-    void dfs(int i, int j,int n,int m,int oldCol,int newCol,vector<vector<int>>& image){
-        vector<int> a = {-1,1,0,0},
-                    b = {0,0,-1,1};
-        image[i][j] = newCol;
-        for(int k = 0;k<=3;k++){
-            int newI = i + a[k],newJ = j + b[k];
-            if(valid(newI,newJ,n,m) && image[newI][newJ] == oldCol && vis[newI][newJ] == 0){
-                vis[newI][newJ] = 1;
-                //image[newI][newJ] = newCol;
-                dfs(newI,newJ,n,m,oldCol,newCol,image);
-            }
-        }
-    }
+
     vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
-        int n = image.size(), m = image[0].size();
-        //image[sr][sc] = color;
-        dfs(sr,sc,n,m,image[sr][sc],color,image);
+        int n = image.size(),m = image[0].size();
+
+        queue<pair<int,int>> q;
+        if(color == image[sr][sc])return image;
+        q.push({sr,sc});
+        int initialColor = image[sr][sc];
+        vector<int> dx = {1,-1,0,0};
+        vector<int> dy = {0,0,1,-1};
+
+        while(!q.empty()){
+            auto curr = q.front();
+            q.pop();
+
+            int currX = curr.first;
+            int currY = curr.second;
+            int currColor = image[currX][currY];
+            image[currX][currY] = color;
+
+            for(int k = 0;k<4;k++){
+                int newX = currX + dx[k];
+                int newY = currY + dy[k];
+                if(check(newX,newY,n,m) && image[newX][newY] == initialColor){
+                    q.push({newX,newY});
+                    image[newX][newY] = color;
+                }
+
+            }   
+
+        }
         return image;
     }
 };
