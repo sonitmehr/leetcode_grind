@@ -1,24 +1,25 @@
 class Solution {
 public:
 
-    void f(int ind,vector<int>& v,vector<vector<int>> & ds){
-        if(ind == v.size()){
-            ds.push_back(v);
-            return;
-        }
+    void solve(int i ,vector<int> &nums,vector<int>&vec,vector<vector<int>> &ans){
 
-        for(int i = ind;i<v.size();i++){
-            swap(v[i],v[ind]);
-            f(ind + 1,v,ds);
-            swap(v[i],v[ind]);
+        if(i == nums.size()){
+            ans.push_back(nums);
+            
         }
+        if(i >= nums.size())return;
 
+        for(int k = i;k<nums.size();k ++ ){
+                swap(nums[i],nums[k]);                
+            solve(i + 1,nums,vec,ans);
+                swap(nums[i],nums[k]);                
+        }
     }
-
     vector<vector<int>> permute(vector<int>& nums) {
+        
+        vector<int> vec;
         vector<vector<int>> ans;
-
-        f(0,nums,ans);
+        solve(0,nums,vec,ans);
         return ans;
     }
 };
