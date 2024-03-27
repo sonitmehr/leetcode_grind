@@ -11,29 +11,22 @@
  */
 class Solution {
 public:
-    
-    TreeNode * f(TreeNode * root){
-        if(root == NULL)return root;
-        
-        TreeNode * l = f(root -> left);
-        TreeNode * r = f(root -> right);
-        
-        if(root -> left != NULL){
-            if(l !=NULL){
-                l -> right = root -> right;
-                root -> right = root -> left;
-                root -> left = NULL;
-            }
-        }
-        if(r != NULL)return r;
-        else if(l != NULL)return l;
-        else return root;
-            
-        
+
+    void solve(TreeNode * root,TreeNode * prev){
         
     }
-    
+
+        TreeNode * prev = NULL;
     void flatten(TreeNode* root) {
-        root = f(root);
+        if(root == NULL) return;
+
+        
+        flatten(root->right);
+        flatten(root->left);
+
+        root->right = prev;
+        root->left = NULL;
+        prev = root;
+
     }
 };
