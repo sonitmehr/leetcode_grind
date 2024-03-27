@@ -11,25 +11,25 @@
  */
 class Solution {
 public:
-    
-    void f(TreeNode* root,vector<int> &v,int maxEle){
-        if(root == NULL) return;
+
+    void solve(TreeNode* root,int level,vector<int> &ans){
         
-        if(v.size() <=maxEle){
-            v.push_back(root->val);
-            
-           
+        if (root == NULL)return ;
+
+        
+
+        if(ans.size() == level){
+            ans.push_back(root->val);
         }
-        
-        f(root ->right,v,maxEle+1);
-        f(root->left,v,maxEle+1);
-      
-   }
+
+        solve(root->right,level + 1,ans);
+        solve(root->left,level + 1,ans);
+
+    }
+
     vector<int> rightSideView(TreeNode* root) {
-        vector<int> v;
-        int maxEle = 0;
-        f(root,v,maxEle);
-        return v;
-        
+        vector<int> ans;
+        solve(root,0,ans);
+        return ans;
     }
 };
