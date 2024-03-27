@@ -12,24 +12,30 @@
 class Solution {
 public:
     int sum = 0;
-    void  f(TreeNode * root,int val){
-        if(root == NULL)return;
-        if(root->left == NULL && root->right==NULL){
-            val = 10*val + root->val;
-            //cout << "valS " << val << endl;
-            sum += val;
-        }
-        else {
-            val = 10*val + root->val;
-            
-            //cout << "val " << val << endl;
-            f(root->left,val);
+    void solve(TreeNode * root,int currVal){
 
-            f(root->right,val);
+        if(root == NULL)return ;
+
+        if(root->left == NULL && root->right == NULL){
+        int val = root->val;
+            currVal = 10*currVal + val;
+            sum += currVal;
+            return;
         }
+        int val = root->val;
+
+        currVal = 10*currVal + val;
+        solve(root->left,currVal);
+        solve(root->right,currVal);
+
+
     }
+
     int sumNumbers(TreeNode* root) {
-        f(root,0);
-        return sum;
+        
+            solve(root,0);
+
+            return sum;
+
     }
 };
