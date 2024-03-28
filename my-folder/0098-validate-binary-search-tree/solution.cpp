@@ -11,17 +11,39 @@
  */
 class Solution {
 public:
-    
-    bool f(TreeNode * root,long left,long right){
-        if(root == NULL)return true;
-        
-        if(!(root -> val < right and root->val > left))return false;
-        
-        return f(root->left,left,root->val) && f(root->right,root->val,right);
+
+    int maxValue(TreeNode * root){
+        if(root == NULL)return INT_MIN;
+
+        int value = root->val;
+
+        int left = maxValue(root->left);
+        int right = maxValue(root->right);
+
+        return max(value,max(left,right));
     }
-    
+    int minValue(TreeNode * root){
+        if(root == NULL)return INT_MAX;
+
+        int value = root->val;
+
+        int left = minValue(root->left);
+        int right = minValue(root->right);
+
+        return min(value,min(left,right));
+    }
+
     bool isValidBST(TreeNode* root) {
         
-        return f(root,LLONG_MIN,LLONG_MAX);
+        if(root == NULL)return true;
+        int val = root->val;
+        if(root->left != NULL && maxValue(root->left) >= val)return false;
+        if(root->right != NULL && minValue(root->right) <= val)return false;
+
+        if(!isValidBST(root->left)  || !isValidBST(root->right))return false;
+
+        return true;
+
+
     }
 };
