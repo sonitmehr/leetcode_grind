@@ -1,21 +1,49 @@
 class Solution {
 public:
-    int dp[1001][1001];
-    string s1,s2;
-    int f(int i,int j){
-        if(i <0 || j < 0)return 0;
 
+    int solve(int i,int j,string &s1,string &s2,vector<vector<int>> &dp){
+        
+        if(i < 0){
+            return j + 1;
+        }
+        if(j < 0){
+            return i + 1;
+        }
         if(dp[i][j] != -1)return dp[i][j];
-        int one = 0;
-        if(s1[i] == s2[j])one = 1 + f(i - 1,j - 1);
-        return dp[i][j] = max({one,f(i - 1,j),f(i,j- 1)});
-    }
-    int minDistance(string word1, string word2) {
-        memset(dp,-1,sizeof(dp));
-        s1 = word1,s2 = word2;
-        int n1 = s1.size(),n2 = s2.size();
-        int ans = f(n1-1,n2-1);
+        int one = 1e9;
+        if(s1[i] == s2[j]){
+            one = solve(i - 1,j - 1,s1,s2,dp);
+        }
+        int two = 1 + solve(i - 1,j,s1,s2,dp);
+        int three = 1 + solve(i,j - 1,s1,s2,dp);
 
-        return n1 - ans + n2 - ans;
+        return dp[i][j] = min(one,min(two,three));
+    }
+
+    int minDistance(string s1, string s2) {
+        int n = s1.size(),m = s2.size();
+        // vector<vector<int>> dp(n + 1,vector<int> (m + 1,0));
+        vector<int> prev(m + 1,0),curr(m + 1,0);
+        for(int i = 0;i<=m;i++){
+            prev[i] = i;
+        }
+        // for(int i = 0;i<=n;i++){
+        //     dp[i][0] = i;
+        // }
+
+        for(int i = 1;i<=n;i++){
+            curr[0] = i;
+            for(int j = 1;j<=m;j++){
+                if(s1[i - 1] == s2[j - 1]){
+                    curr[j] = prev[j - 1];
+                }
+                else{
+                    curr[j] = 1 + min(prev[j],curr[j - 1]);
+                }
+            }
+            prev = curr;
+        }
+
+        return curr[m];
     }
 };
