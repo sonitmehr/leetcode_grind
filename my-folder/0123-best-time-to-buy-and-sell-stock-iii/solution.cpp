@@ -1,22 +1,48 @@
 class Solution {
 public:
-    int dp[100001][3][3];
-    int f(int i,int buy,int k,vector<int>&a){
-        if(i == a.size())return 0;
-        if(k <= 0)return 0;
-        int profit= 0;
-        if(dp[i][buy][k] != -1)return dp[i][buy][k];
-        if(buy){
-            profit = max(-a[i] + f(i + 1,0,k,a),f(i + 1,1,k,a));
+    int solve(int i, int isBought, int k, vector<int>& prices,
+              vector<vector<vector<int>>>& dp) {
+            
+            if(k < 0)return -1e9;
+        if (prices.size() == i) {
+            if (k < 0)
+                return -1e9;
+            return 0;
         }
-        else{
-            profit = max(a[i] + f(i + 1,1,k-1,a),f(i + 1,0,k,a));
+        if (dp[i][isBought][k] != -1)
+            return dp[i][isBought][k];
+        int ans = -1e9;
+        if (isBought == 0) {
+            ans = max(-prices[i] + solve(i + 1, 1, k, prices, dp),
+                      solve(i + 1, 0, k, prices, dp));
+        } else {
+            ans = max(prices[i] + solve(i + 1, 0, k - 1, prices, dp),
+                      solve(i + 1, 1, k, prices, dp));
         }
-        return dp[i][buy][k] = profit;
-    }   
+        return dp[i][isBought][k] = ans;
+    }
 
     int maxProfit(vector<int>& prices) {
-        memset(dp,-1,sizeof(dp));
-        return f(0,2,2,prices);
+
+        int n = prices.size();
+        int k = 2;
+        vector<vector<vector<int>>> dp(
+            n + 1, vector<vector<int>>(2, vector<int>(k + 1, 0)));
+        
+
+        for(int i = n - 1;i>=0;i--){
+            for(int isBought = 0;isBought <=1;isBought++){
+                for(int K = 1;K<=k;K++){
+                    if(isBought == 0){
+                        dp[i][isBought][K] = max(-prices[i] + dp[i + 1][1][K],dp[i+1][0][K]);
+                    }    
+                    else{
+                        dp[i][isBought][K] = max(prices[i] + dp[i+1][0][K-1],dp[i+1][1][K]);
+                    }
+                }
+            }
+        }
+        return dp[0][0][2];
+
     }
 };
