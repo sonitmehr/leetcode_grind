@@ -1,42 +1,37 @@
 class Solution {
 public:
-    int dp[30001][2];
-    int f(int i,int buy,vector<int>&a){
-        
-        if(i >= a.size())return 0;
 
-        int one = -1e9;
-        if(dp[i][buy] != -1)return dp[i][buy];
-        if(buy){
-            one = max(-a[i] + f(i + 1,0,a),f(i + 1,1,a));
-        }
-        // sell
-        else {
-            one = max(a[i] + f(i+1,1,a),f(i + 1,0,a));
-        }
-        return dp[i][buy] = one;
+    int solve(int i,int isBought,vector<int> &prices){
         
+        if(i == prices.size()){
+            return 0;
+        }
+
+        int one = -1e9,two = -1e9;
+        if(isBought == 0){
+            one = max(-prices[i]  + solve(i + 1,1,prices),solve(i + 1,0,prices));
+
+        }
+        else{
+            one = max(prices[i] + solve(i + 1,0,prices),solve(i + 1,1,prices));
+        }
+        return one;
     }
 
     int maxProfit(vector<int>& prices) {
-        //memset(dp,-1,sizeof(dp));
-        int n = prices.size();
-        dp[n][0] = 0;
-        dp[n][1] = 0;
+        int n  = prices.size();
+        vector<vector<int>> dp(n + 1,vector<int>(2,0));
 
         for(int i = n - 1;i>=0;i--){
-            for(int buy = 0;buy<2;buy++){
-                int one = 0;
-                if(buy){
-                    one = max(-prices[i] + dp[i + 1][0],dp[i+1][1]);
+            for(int buy = 0;buy <=1;buy++){
+                if(buy == 0){
+                    dp[i][buy] = max(-prices[i] + dp[i + 1][1],dp[i + 1][0]);
                 }
                 else{
-                    one = max(prices[i] + dp[i+1][1],dp[i+1][0]);
+                    dp[i][buy] = max(prices[i] + dp[i + 1][0],dp[i + 1][1]);
                 }
-                dp[i][buy] = one;
             }
-            
         }
-        return dp[0][1];
+        return dp[0][0];
     }
 };
