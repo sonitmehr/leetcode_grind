@@ -1,54 +1,50 @@
+#define pi pair<pair<int,int>,int>
 class Solution {
 public:
-    int maxTime = 0;
-    vector<int> newI = {1,-1,0,0};
-    vector<int> newJ = {0,0,1,-1};
-    int rottenOranges = 0;
-    bool check(int new_i,int new_j,int n,int m){
-        if(new_i >= n || new_j >= m || new_i < 0 || new_j < 0)return false;
+bool check( int i,int j,int n,int m){
+        if(i < 0 || j < 0 || i >= n || j >= m)return false;
         return true;
     }
-
-    void bfs(queue<pair<pair<int,int>,int>> &q,int n,int m,vector<vector<int>>& grid){
-        while(!q.empty()){
-            auto curr = q.front();
-            q.pop();
-
-            int time = curr.second;
-            int currI = curr.first.first;
-            int currJ = curr.first.second;
-            maxTime = max(maxTime,time);
-            for(int k = 0;k<4;k++){
-                int new_i = currI + newI[k];
-                int new_j = currJ + newJ[k];
-
-                if(check(new_i,new_j,n,m) && grid[new_i][new_j] == 1){
-                    q.push({{new_i,new_j},time + 1});
-                    grid[new_i][new_j] = 2;
-                    rottenOranges ++;
-                }
-            }
-
-        }
-    }
-
     int orangesRotting(vector<vector<int>>& grid) {
         int n = grid.size(),m = grid[0].size();
-        queue<pair<pair<int,int>,int>> q;
 
-        int totalOranges = 0;
-        for(int i = 0;i<n;i++){
+        int cnt = 0;
+        queue<pi> q;
+vector<int> dx = {-1,1,0,0};
+        vector<int> dy = {0,0,1,-1};
+        for(int i= 0;i<n;i++){
             for(int j = 0;j<m;j++){
-               if(grid[i][j] == 2){
+                if(grid[i][j] == 2){
                     q.push({{i,j},0});
-               }
-               if(grid[i][j] == 1)totalOranges++;
+                }
+                if(grid[i][j] == 1)cnt++;
             }
-
         }
-        bfs(q,n,m,grid);
+        int maxTime = 0;
+        while(!q.empty()){
+            pi top = q.front();
+            q.pop();
+
+            int currX = top.first.first;
+            int currY = top.first.second;
+            int time = top.second;
+            maxTime = max(maxTime,time);
+            for(int k = 0;k<=3;k++){
+                int newX = currX + dx[k];
+                int newY = currY + dy[k];
+                if(check(newX,newY,n,m) && grid[newX][newY] == 1){
+                // cout << newX << " " << newY << endl;
+                    q.push({{newX,newY},time+ 1});
+                    grid[newX][newY] = 2;
+                    cnt--;
+                }
+            
+            
+            }
+        }
+        return cnt == 0 ? maxTime : -1;
         
-        return totalOranges == rottenOranges ? maxTime : -1;
+        
 
     }
 };
