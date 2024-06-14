@@ -1,52 +1,55 @@
+#define pi pair<pair<int,int>,int>
 class Solution {
 public:
-    /*
-    [[0,1,0],
-     [0,1,0],
-     [0,1,0],
-     [0,1,0],
-     [0,1,0]]
-    */
-    bool valid(int i,int j,int n,int m){
+    int n,m;
+    bool check(int i,int j){
         if(i < 0 || j < 0 || i >= n || j >= m)return false;
         return true;
     }
+    vector<int> dx = {-1,1,0,0};
+    vector<int> dy = {0,0,-1,1};
+    
+
     vector<vector<int>> updateMatrix(vector<vector<int>>& mat) {
-        int n = mat.size(),m = mat[0].size();
-        vector<vector<int>> ans(n,vector<int>(m,1e9));
-        vector<vector<int>> vis(n+1,vector<int>(m+1,0));
-        queue<pair<pair<int,int>,int>> q;
+        n = mat.size(),m =mat[0].size();
+        vector<vector<int>> dist(n ,vector<int> (m ,1e9));
+        vector<vector<int>> vis(n ,vector<int> (m ,0));
+
+        queue<pi> q;
+
         for(int i = 0;i<n;i++){
             for(int j = 0;j<m;j++){
                 if(mat[i][j] == 0){
                     q.push({{i,j},0});
-                    ans[i][j] = 0;
                     vis[i][j] = 1;
+                    dist[i][j] = 0;
                 }
-                //lse ans[i][j] = 0;
             }
         }
+
         while(!q.empty()){
             auto p = q.front();
-            vector<int> a = {-1,1,0,0},b = {0,0,-1,1};
-            int i = p.first.first;
-            int j = p.first.second;
-            int dist = p.second;
             q.pop();
-            vis[i][j] = 1;
-            bool flag = false;
-            if(mat[i][j] == 1)ans[i][j] = min(ans[i][j],dist);
+
+            int currX = p.first.first;
+            int currY = p.first.second;
+            int distance = p.second;
+            // dist[i][j] = min(dist[i][j],distance + 1);
+
+                    vis[currX][currY] = 1;
             for(int k = 0;k<=3;k++){
-                int newI = i + a[k],newJ = j + b[k];
-                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0){
-                    q.push({{newI,newJ},dist+1});
+                int newX = currX + dx[k];
+                int newY = currY + dy[k];
+
+                if(check(newX,newY) && vis[newX][newY] == 0){
+                    dist[newX][newY] = min(dist[newX][newY],distance + 1);
+                    q.push({{newX,newY},distance + 1});
                 }
             }
-            
-
         }
-        return ans;
+        
 
+        return dist;
 
     }
 };
