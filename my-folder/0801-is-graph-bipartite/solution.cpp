@@ -1,54 +1,43 @@
 class Solution {
 public:
-    int color[101];
-    int vis[101];
-    vector<int> adj[101];
-    bool f(int node,int c){
-        vis[node] = 1;
-        color[node] = c;
-        for(auto i : adj[node]){
-            if(vis[i] == 0){
-                if(f(i,c^1) == false)return false;
+
+    bool solve(int i,vector<int> adj[],int color,vector<int> &arr){
+        
+        
+
+        
+
+                arr[i] = color;
+        for(auto &adjEle : adj[i]){
+            if(arr[adjEle] == color){
+                return false;
             }
-            else if(color[node] == color[i])return false;
+            else if(arr[adjEle] == -1){
+                if(solve(adjEle,adj,color ^ 1,arr) == false)return false;
+            }
         }
         return true;
+        
+
     }
 
     bool isBipartite(vector<vector<int>>& graph) {
-        for(int i = 0;i<graph.size();i++){
-            for(auto j : graph[i]){
-                adj[i].push_back(j);
-                //adj[j].push_back(i);
-            }
-            
-            
-        }
-        queue<pair<int,int>> q;
-        for(int i = 0;i<graph.size();i++){
-            if(vis[i] == 0){
-                q.push({i,0});
+        int n = graph.size();
+        vector<int> adj[n];
 
-                while(!q.empty()){
-                    auto p = q.front();
-                    q.pop();
-                    int currNode = p.first;
-                    int c = p.second;
-                    if(vis[currNode] == 1)continue;
-                    vis[currNode ] = 1;
-                    color[currNode] = c;
-                    for(auto node : adj[currNode]){
-                        if(vis[node] == 0){
-                            q.push({node,c^1});
-                        }
-                        else if(color[node ] == color[currNode]){
-                            return false;
-                        }
-                    }
-                }
+        for(int i= 0;i<n;i++){
+            for(int j = 0;j<graph[i].size();j++){
+                adj[graph[i][j]].push_back(i);
+                adj[i].push_back(graph[i][j]);
             }
-            
+        } vector<int> arr(n,-1);
+        for(int i = 0;i<n;i++){
+            if(arr[i] == -1)
+            {
+                if(solve(i,adj,0,arr)== false)return false;
+            }
         }
         return true;
+    //    return solve(0,adj,0,arr);
     }
 };
