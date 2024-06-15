@@ -13,23 +13,25 @@ public:
     int shortestPathBinaryMatrix(vector<vector<int>>& mat) {
         int n = mat.size(),m = mat[0].size();
         vector<int> a = {-1,-1,-1,1,1,1,0,0}, b = {0,-1,1,0,-1,1,-1,1};
-        priority_queue<pii,vector<pii>,greater<pii>> q;
+        queue<pii> q;
+        vector<vector<int>> dist(n,vector<int> (m,1e9));
         if(mat[0][0] == 1)return -1;
         q.push({1,{0,0}});
         while(!q.empty()){
-            auto p = q.top();
+            auto p = q.front();
             q.pop();
 
-            int dist = p.first;
+            int distance = p.first;
             int i = p.second.first;
             int j = p.second.second;
-            if(i == n - 1 && j == m - 1)return dist;
-            if(vis[i][j] == 1)continue;
-            vis[i][j] = 1;
+            if(i == n - 1 && j == m - 1)return distance;
             for(int k = 0;k<=7;k++){
-                int newI = i + a[k],newJ = j + b[k];
-                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0 && mat[newI][newJ] == 0){
-                    q.push({dist + 1,{newI,newJ}});
+                int newI = i + a[k];
+                int newJ = j + b[k];
+                if(valid(newI,newJ,n,m) && mat[newI][newJ] == 0 && distance + 1 < dist[newI][newJ]){
+                    dist[newI][newJ] = distance + 1;
+                    q.push({distance + 1,{newI,newJ}});
+
                 }
 
             }
