@@ -1,37 +1,42 @@
 class Solution {
 public:
-int inDegree[2001] = {0};
-    vector<int> findOrder(int n, vector<vector<int>>& v) {
-        vector<int> adj[n + 1];
-        for(auto i : v){
-            adj[i[0]].push_back(i[1]);
-        }
-        
-
-        for(auto i : adj){
-            for(auto j : i){
-                inDegree[j] ++;
-            }
-        }
-        queue<int> q;
-        for(int i = 0;i<n;i++){
-            if(inDegree[i] == 0)q.push(i);
+    vector<int> findOrder(int V, vector<vector<int>>& prerequisites) {
+        vector<int> adj[V];
+        for(int i = 0;i<prerequisites.size();i++){
+            int a = prerequisites[i][0];
+            int b = prerequisites[i][1];
+            adj[a].push_back(b);
+            // adj[b].push_back(a);
         }
         vector<int> ans;
-        while(!q.empty()){
-            auto p = q.front();
-
-            q.pop();
-            ans.push_back(p);
-            for(auto i : adj[p]){
-                inDegree[i]--;
-                if(inDegree[i] == 0)q.push(i);
-
-            }
-
-        }
+	    vector<int> inDeg(V,0);
+	   
+	    queue<int> q;
+	       
+	   for(int i = 0;i<V;i++){
+	       for(int &node : adj[i]){
+	           inDeg[node] ++;
+	       }
+	   }
+	   
+	   for(int i = 0;i<V;i++){
+	       if(inDeg[i] == 0)q.push(i);
+	   }
+	   
+	   
+	    while(!q.empty()){
+	        int node = q.front();
+	        q.pop();
+	        ans.push_back(node);
+	        for(int &k : adj[node]){
+	            inDeg[k]--;
+	            if(inDeg[k] == 0)q.push(k);
+	            
+	        }
+	        
+	    }
+    vector<int> empty;
         reverse(ans.begin(),ans.end());
-        if(ans.size() == n)return ans;
-        return {};
+	    return ans.size() == V ? ans : empty;
     }
 };
