@@ -1,42 +1,43 @@
 class Solution {
 public:
-    int vis[10001];
-    int inDegree[10001];
-    vector<int> adjMat[10001];
-    vector<int> eventualSafeNodes(vector<vector<int>>& adj) {
-        int n = adj.size();
-        for(int i = 0;i<n;i++){
-            for(auto j : adj[i]){
-                adjMat[j].push_back(i);
+    vector<int> eventualSafeNodes(vector<vector<int>>& graph) {
+        int V = graph.size();
+        vector<int> adj[V];
+        for(int i = 0;i<V;i++){
+            int from = i;
+            for(int &j : graph[i]){
+                int to = j;
+                adj[to].push_back(from);
             }
-        }
-
-        for(int i = 0;i<n;i++){
-            for(auto j : adjMat[i]){
-                inDegree[j]++;
-            }
-        }
-        // for(int i = 0;i<n;i++){
-        //     cout << inDegree[i] <<  " ";
-        // }
-        //cout << endl;
-        queue<int> q;
-        for(int i = 0;i<n;i++){
-            if(inDegree[i] == 0){
-                //cout << i << endl;
-                q.push(i);}
         }
         vector<int> ans;
-        while(!q.empty()){
-            auto p = q.front();
-            q.pop();
-            ans.push_back(p);
-            for(auto i : adjMat[p]){
-                inDegree[i] --;
-                if(inDegree[i] == 0)q.push(i);
-            }
-        }
+	    vector<int> inDeg(V,0);
+	   
+	    queue<int> q;
+	       
+	   for(int i = 0;i<V;i++){
+	       for(int &node : adj[i]){
+	           inDeg[node] ++;
+	       }
+	   }
+	   
+	   for(int i = 0;i<V;i++){
+	       if(inDeg[i] == 0)q.push(i);
+	   }
+	   
+	   
+	    while(!q.empty()){
+	        int node = q.front();
+	        q.pop();
+	        ans.push_back(node);
+	        for(int &k : adj[node]){
+	            inDeg[k]--;
+	            if(inDeg[k] == 0)q.push(k);
+	            
+	        }
+	        
+	    }
         sort(ans.begin(),ans.end());
-        return ans;
+	    return ans;
     }
-}; 
+};
