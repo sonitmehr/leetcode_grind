@@ -1,44 +1,57 @@
-#define pii pair<pair<int,int>,pair<int,int>>
+#define pi pair<int,pair<int,int>>
+
 class Solution {
 public:
-    int vis[101][101];
-    bool valid(int i, int j,int n,int m){
-        if(i < 0 || i >=n || j < 0 || j>=m)return false;
-        return true;
-    }
-    int minimumEffortPath(vector<vector<int>>& mat) {
-        int n = mat.size(),m = mat[0].size();
-        vector<int> a = {-1,1,0,0}, b = {0,0,1,-1};
-        priority_queue<pii,vector<pii>,greater<pii>> q;
-        //if(mat[0][0] == 1)return -1;
-        q.push({{0,mat[0][0]},{0,0}});
-        int mini = 1e9;
+bool check(int i,int j,int n,int m){
+    if(i < 0 || j < 0 || i >= n || j >= m)return false;
+    return true;
+}
+    int minimumEffortPath(vector<vector<int>>& heights) {
+        
+        int n = heights.size(),m = heights[0].size();
+
+        priority_queue<pi,vector<pi>,greater<pi>> q;
+
+
+        q.push({0,{0,0}});
+        vector<int> dx = {1,-1,0,0};
+        vector<int> dy = {0,0,1,-1};
+        vector<vector<int>> dist(n,vector<int> (m,1e9));
+        dist[0][0] = 0;
         while(!q.empty()){
             auto p = q.top();
             q.pop();
 
-            int dist = p.first.first;
-            int prev = p.first.second;
+
             int i = p.second.first;
             int j = p.second.second;
-            if(i == n - 1 && j == m - 1){
-                mini = min(mini,dist);
-                continue;
-            }
-            if(vis[i][j] == 1)continue;
-            vis[i][j] = 1;
-            for(int k = 0;k<=3;k++){
-                int newI = i + a[k],newJ = j + b[k];
-                if(valid(newI,newJ,n,m) && vis[newI][newJ] == 0){
-                    int diff = abs(mat[newI][newJ] - prev);
-                    diff = max(diff,dist);
-                    // cout << newI << " " << newJ << " " << diff << endl;
-                    q.push({{diff,mat[newI][newJ]},{newI,newJ}});
-                }
+            int dis = p.first;
 
+
+
+            for(int k = 0;k<4;k++){
+                int newX = i + dx[k];
+                int newY = j + dy[k];
+                
+                if(check(newX,newY,n,m)){
+                    int diff =  max(dis,abs(heights[i][j] - heights[newX][newY]));
+                    if(dist[newX][newY] > diff){
+                        dist[newX][newY] = diff;
+                        q.push({diff,{newX,newY}});
+                    }
+                }
             }
-            
+            // for(int i = 0;i<n;i++){
+            //     for(int j = 0;j<m;j++){
+            //         cout << dist[i][j] << " ";
+            //     }
+            //     cout << endl ;
+            // }
+            // cout << endl;
         }
-        return mini;
+
+            return dist[n - 1][m - 1];
+
+
     }
 };
