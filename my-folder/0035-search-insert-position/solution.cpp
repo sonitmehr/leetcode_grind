@@ -1,17 +1,26 @@
 class Solution {
 public:
-    int searchInsert(vector<int>& v, int target) {
-        int n = v.size();
-        int l=  0,r = n - 1;
-        while( l <= r){
-            int mid = ( l + r)/2;
-            if(v[mid]== target)return mid;
-            if(v[mid] < target){
-                l = mid + 1;
+int lowerBound(vector<int> &v, int n, int x) {
+	int low = 0, high = n - 1;
+        int ans = n;
+        while(low <= high){
+            int mid = (low + high)/2;
+            // cout << mid << " ";
+            if(v[mid] >= x){
+                ans = mid;
+                high = mid - 1;
             }
-            else r = mid -1;
-
+            else low = mid + 1;
+            // cout << low<< " "<<high << endl;
+            
         }
-        return l;
+        return ans;
+}
+
+    int searchInsert(vector<int>& nums, int target) {
+        int n = nums.size();
+        return lowerBound(nums,n,target);
+        // int ind = it - nums.begin();
+        // return ind;
     }
 };
