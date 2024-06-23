@@ -2,17 +2,26 @@ class Solution {
 public:
     int singleNonDuplicate(vector<int>& v) {
         int n = v.size();
-        int l = 0,r = n -1 ;
-        if(n == 1)return v.back();
-        while(l <= r){
-            int mid = (l + r)/2;
-            //cout << l << " " << r << endl;
-            if((mid == 0 || v[mid] != v[mid - 1]) && (mid == n -1 || v[mid] != v[mid + 1]))return v[mid];
+        int i = 0,j = n -1;
 
-            if(mid%2 == 1 && v[mid] == v[mid - 1])l = mid + 1;
-            else if(mid%2 == 0 && v[mid] == v[mid + 1])l = mid + 1;
-            else r = mid - 1;
-            //cout << l << " " << r << endl <<endl;
+        while(i <= j){
+            int mid = (i + j)/2;
+            int curr = v[mid];
+            int prev = -1,next = -1;
+
+            if(mid > 0)prev = v[mid - 1];
+            if(mid < n - 1)next = v[mid + 1];
+
+            if(prev != curr && next != curr)return curr;
+
+            if(prev == curr){
+                if((mid - 1) % 2 == 0)i = mid + 1;
+                else j = mid - 1;
+            }
+            else if(next == curr){
+                if(mid % 2 == 0) i = mid + 1;
+                else j = mid - 1;
+            }
         }
         return -1;
     }
