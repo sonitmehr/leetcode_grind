@@ -1,26 +1,25 @@
 class Solution {
 public:
-    int findMin(vector<int>& nums) {
-        int n = nums.size();
-        if(n==1)return nums[0];
-        int l = 0,r = n - 1;
-        int mid;
-        while(l <= r){
-            
-            mid = l + (r-l)/2;
-            int curr = nums[mid];
-            
-            if(nums[l] <= nums[r])return nums[l];
-            
-            else if(curr >= nums[r]){
-                l = mid+1;
+    int findMin(vector<int>& v) {
+        int n = v.size();
+        int i =0,j = n - 1;
+        int ans = INT_MAX;
+        while(i <= j){
+            int mid = (i + j)/2;
+            int curr = v[mid];
+
+            int left = v[i],right = v[j];
+            // cout << i << " " << j << " " << mid << " " << v[mid] << endl;
+            if(curr >= left){
+                ans = min(ans,left);
+                i = mid + 1;
             }
-            else if(curr < nums[r]){
-                r = mid;
+            else{
+                ans = min(ans,curr);
+                j = mid - 1;
             }
-            
         }
-        // Left pointer should be at the min element.
-        return nums[l];
-    }
+        return ans;
+        
+        }
 };
