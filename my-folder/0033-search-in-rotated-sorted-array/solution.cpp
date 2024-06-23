@@ -2,23 +2,28 @@ class Solution {
 public:
     int search(vector<int>& v, int target) {
         int n = v.size();
-        int l = 0, r = n - 1,mid;
-        while(l <= r){
-            mid = l + (r-l)/2;
+
+        int i = 0,j =  n - 1;
+
+        while(i <= j){
+            int mid = (i + j)/2;
             int curr = v[mid];
-            // Usually we go left here.
-            //cout << curr << endl;
+            cout << i << " " << j << " ";
+            cout << mid << " " <<curr << " ";
+            int left = v[i],right = v[j];
             if(curr == target)return mid;
-            else if(curr >= v[l]){
-                if(curr > target && target >= v[l])r = mid - 1;
-                else l = mid + 1;
+            if(curr >= left){
+                cout << "Enter 1 " << endl;
+                if(target >= left && target <= curr)j = mid - 1;
+                else i = mid + 1;
+
             }
             else{
-                if(target > curr && target <= v[r])l = mid + 1;
-                else r = mid - 1;
+                cout << "Enter 2 " << endl;
+                if(target >= curr && target <= right)i = mid + 1;
+                else j = mid -1;
             }
-                
-                // 4 5 6 7 8 0 1 2
+
         }
         return -1;
     }
