@@ -1,36 +1,35 @@
 class Solution {
 public:
     string minWindow(string s, string t) {
-        unordered_map<char,int> tmap;
-        // Make a t_map for elements in t
-        for(auto &c : t)tmap[c]++;
-    
-        int minLength = 1e9,minStart = -1;
-        int i=0,j = 0,n=s.size(),counter = t.size();
-        
-        // Simple 2 pointer sliding window
+        int n = s.size();
+        int sz = t.size();
+        unordered_map<char,int> m;
+        for(auto &c: t)m[c]++;
+        int  i = 0,j = 0,cnt = 0,minLen = INT_MAX,startInd = -1;
         while(j < n){
-            if(tmap[s[j]] > 0){
-                counter--;
+            if(m[s[j]] > 0){
+                cnt++;
             }
-            tmap[s[j]]--;
-            while(counter == 0){
-                
-                if(j - i + 1 < minLength){
-                    minLength = j - i + 1;
-                    minStart = i;
+            m[s[j]]--;
+          
+            
+            while(cnt == sz){
+                if(j - i + 1 < minLen){
+                    startInd = i;
+                    minLen = min(minLen, j - i + 1);
                 }
-                
-                tmap[s[i]]++;
-                if(tmap[s[i]] > 0){
-                    counter++;
+                m[s[i]]++;
+                if(m[s[i]] > 0){
+                    cnt--;
                 }
                 i++;
+                // cout << startInd << " " << minLen << endl;
             }
             j++;
-
         }
-
-        return (minLength == 1e9) ? "" : s.substr(minStart,minLength);
+        if(startInd == -1)return "";
+        cout << startInd << " " << minLen << endl;
+        // return "";
+        return s.substr(startInd,minLen);
     }
 };
