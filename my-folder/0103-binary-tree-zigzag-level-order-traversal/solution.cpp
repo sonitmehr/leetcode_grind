@@ -11,47 +11,41 @@
  */
 class Solution {
 public:
-    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
-        queue<pair<TreeNode*,int>> q;\
-        if(root==NULL)return {};
-        q.push({root,0});
-
-        int val = 0;
-        int currLevel = 0;
-        vector<vector<int>> ans;
-        vector<int> vec;
+    vector<vector<int>> ans;
+    vector<vector<int>> solve(TreeNode* root){
+        
+        if(!root)return ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        bool flag = false;
         while(!q.empty()){
-            auto curr = q.front();
-            q.pop();
-
-            TreeNode* currNode = curr.first;
-            int level = curr.second;
-            if(level != currLevel){
-                if(val == 1)reverse(vec.begin(),vec.end());
-                val = !val;
-                ans.push_back(vec);
-                vec.clear();
-                currLevel = level;
-            }
-            vec.push_back(currNode->val);
             
-            if(currNode->left != NULL){
-                q.push({currNode->left,level+ 1});
+            int n = q.size();
+            vector<int> vec;
+            for(int i = 0;i<n;i++){
+                auto p = q.front();
+                q.pop();
+                vec.push_back(p->val);
+                if(p->left != NULL){
+                    q.push(p->left);
+                }
+                if(p->right != NULL){
+                    q.push(p->right);
+                }
             }
-            if(currNode->right != NULL){
-                q.push({currNode->right,level+ 1});
 
+            if(flag){
+                reverse(vec.begin(),vec.end());
             }
+            ans.push_back(vec);
+           flag = !flag;
 
-            
-
-        }
-        if(vec.size() > 0){
-             if(val == 1)reverse(vec.begin(),vec.end());
-                val = !val;
-                ans.push_back(vec);
-                vec.clear();
         }
         return ans;
+
+    }
+
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        return solve(root);
     }
 };
