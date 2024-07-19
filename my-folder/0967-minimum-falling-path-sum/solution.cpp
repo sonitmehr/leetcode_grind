@@ -1,27 +1,29 @@
 class Solution {
 public:
-    int dp[1001][1001];
-    int f(int i, int j,int n, int m,vector<vector<int>>& grid){
-       
-        
-        if(i >= n || i < 0 || j >=m || j < 0)return 1e9;
-        if(i == (n -1))return grid[i][j];
+    int minFallingPathSum(vector<vector<int>>& mat) {
+        int n = mat.size();
 
-        if(dp[i][j] !=-1)return dp[i][j];
-        
-        return dp[i][j] = grid[i][j] + min({f(i+1,j,n,m,grid),f(i+1,j-1,n,m,grid),f(i+1,j+1,n,m,grid)});
-    }
+        vector<vector<int>> dp(n,vector<int>(n,1e9));
 
 
-    int minFallingPathSum(vector<vector<int>>& grid) {
+        for(int i= 0;i<n;i++){
+            dp[0][i] = mat[0][i];
+        }
+
+        for(int i = 1;i<n;i++){
+            for(int j= 0;j<n;j++){
+                int up = dp[i-1][j];
+                int topLeft = 1e9;
+                int topRight = 1e9;
+                if(j - 1>=0)topLeft = dp[i - 1][j - 1];
+                if(j + 1 < n)topRight = dp[i - 1][j + 1];
+
+                dp[i][j] = mat[i][j] + min({topLeft,topRight,up});
+            }
+        }
+
+        return *min_element(dp[n - 1].begin(),dp[n - 1].end());
+
         
-        int n = grid.size(),m = grid[0].size();
-        int mini = 1e9;
-        memset(dp,-1,sizeof(dp));
-        //int mini = 1e9;
-        for(int k = 0;k<m;k++){
-            mini = min(mini,f(0,k,n,m,grid));
-        }    
-        return mini;
     }
 };
