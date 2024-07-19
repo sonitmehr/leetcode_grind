@@ -1,23 +1,24 @@
 class Solution {
 public:
-    int dp[301][10001];
-    int f(int i,int sum,vector<int>&a){
-        if(i >= a.size())return 1e9;
-        if(i == a.size() - 1){
-            if(sum%a[i] == 0)return 1;
-            return 0;
+    int change(int amount, vector<int>& v) {
+        int n = v.size();
+
+        vector<vector<int>> dp(n,vector<int>(amount + 1,0));
+
+
+        for(int i = 0;i<=amount;i++){
+            if(i % v[0] == 0)dp[0][i] = 1;
         }
-        if(dp[i][sum] != -1)return dp[i][sum];
 
-        int one = 0;
-        if(sum - a[i] >= 0)one = f(i,sum - a[i],a);
-        return dp[i][sum] = one+f(i+1,sum,a);
+        for(int i = 1;i<n;i++){
+            for(int j = 0;j<=amount;j++){
+                if(j - v[i] >= 0) dp[i][j] += dp[i][j - v[i]]; 
+                dp[i][j] += dp[i - 1][j];
+            }
+        }
 
-    }
-    int change(int amount, vector<int>& coins) {
-        memset(dp,-1,sizeof(dp));
-       int ans =f(0,amount,coins);
-    //    if(ans == 1e9)return -1;
-       return ans;
+        return dp[n - 1][amount];
+
+
     }
 };
