@@ -11,18 +11,17 @@
  */
 class Solution {
 public:
-    
-    // Why does recursion exist?
-    // FUCK MY LIFE.
-    
-    bool isSymmetric(TreeNode* root) {
-        return isMirror(root,root);
-        
+
+    bool solve(TreeNode* p,TreeNode* q){
+        if(p == NULL || q == NULL){
+            return p == q;
+        }
+
+        return p->val == q -> val && solve(p->left,q->right) && solve(p->right,q->left);
+
     }
-    bool isMirror(TreeNode* t1, TreeNode* t2){
-        if(t1 == NULL && t2 == NULL)return true;
-        if(t1 == NULL || t2 == NULL)return false;
-        
-        return(t1->val == t2->val) && isMirror(t1->left,t2->right) && isMirror(t1->right,t2->left);
+
+    bool isSymmetric(TreeNode* root) {
+        return solve(root->left,root->right);
     }
 };
