@@ -1,24 +1,28 @@
 class Solution {
 public:
-    int dp[1001];
-    bool wordBreak(string s, vector<string>& wordDict) {
-        
-        
-        memset(dp,0,sizeof(dp));
-        
-        int n = s.size();
-        dp[n] = 1;
-        for(int i = n - 1;i>=0;i--){
-            for(auto &word : wordDict){
-                if(i + word.size() <= n && s.substr(i,word.size()) == word){
-                    //cout << s.substr(i,word.size()) << " " << word << endl;
-                    dp[i] = dp[i + word.size()];
-                }
-                if(dp[i] == 1)break;
+
+    bool solve(int i,unordered_set<string> &st,string &s,vector<int> &dp){
+        if(i == s.size()){
+            return true;
+        }
+
+        if(dp[i] != -1)return dp[i];
+        string t;
+        for(int ind = i;ind<s.size();ind++){
+            t.push_back(s[ind]);
+            if(st.find(t) != st.end()){
+                // cout << t << endl;
+                if(solve(ind + 1,st,s,dp))return dp[i]=true;
             }
         }
-        return dp[0];
-        
+        return dp[i]=false;
+    }
 
+
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        unordered_set<string> st(wordDict.begin(),wordDict.end());
+        vector<int> dp(n,-1);
+        return solve(0,st,s,dp);
     }
 };
