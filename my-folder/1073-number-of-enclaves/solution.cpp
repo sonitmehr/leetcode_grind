@@ -12,15 +12,14 @@ vector<int> dx = {-1,1,0,0};
         // cout << i<< " " << j << endl;
         vis[i][j] = 1;
 
+        mat[i][j] = 0;
         for(int k = 0;k<=3;k++){
                 int newX = i + dx[k];
                 int newY = j + dy[k];
 
             if(check(newX,newY) && vis[newX][newY] == 0 && mat[newX][newY] == 1){
-                mat[newX][newY] = c;
-                ans ++;
+                mat[newX][newY] = 0;
                 dfs(newX,newY,vis,c,mat);
-                // q.push({{newX,newY},distance + 1});
             }
         }
     }
@@ -45,16 +44,16 @@ vector<int> dx = {-1,1,0,0};
                 dfs(n - 1,i,vis,1,mat);
             }
         }
-        ans = 0;
         for(int i = 0;i<n;i++){
-            for(int j = 0;j<m;j++){
-                if(mat[i][j] == 1 && vis[i][j] == 0){
-                    mat[i][j] = 0;
-                    dfs(i,j,vis,1,mat);
-                    ans++;
+            for(int j= 0;j<m;j++){
+                // cout << mat[i][j] << " ";
+                if(vis[i][j] == 0 && mat[i][j] == 1){
+                    ans ++;
                 }
             }
+                // cout << endl;
         }
+        
         
         return ans;
     }
