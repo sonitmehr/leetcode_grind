@@ -1,41 +1,38 @@
-#define pi pair<int,int>
 class Solution {
 public:
 
-    bool check( int i,int j,int n,int m){
-        if(i < 0 || j < 0 || i >= n || j >= m)return false;
-        return true;
+    vector<int> dx = {-1,1,0,0};
+    vector<int> dy = {0,0,1,-1};
+
+    bool check(int i,int j,int m,int n){
+        return i>=0 && j >= 0 && i< n  &&j<m;
     }
-    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
-        int n = image.size(),m = image[0].size();
-        queue<pi> q;if(color == image[sr][sc])return image;
-        vector<int> dx = {-1,1,0,0};
-        vector<int> dy = {0,0,1,-1};
-        int initialColor = image[sr][sc];
+
+    vector<vector<int>> floodFill(vector<vector<int>>& mat, int sr, int sc, int color) {
+        int n = mat.size();
+        int m = mat[0].size();
+        queue<pair<int,int>> q;
+        int c = mat[sr][sc];
+        if(c == color)return mat;
+        mat[sr][sc] = color;
         q.push({sr,sc});
-        image[sr][sc] = color;
+
         while(!q.empty()){
-            auto top = q.front();
+            auto p = q.front();
             q.pop();
 
-            int currX = top.first;
-            int currY = top.second;
-
-           
-
-                // cout << currX << " : " << currY << endl;
+            auto i = p.first;
+            auto j = p.second;
             for(int k = 0;k<=3;k++){
-                int newX = currX + dx[k];
-                int newY = currY + dy[k];
-                if(check(newX,newY,n,m) && image[newX][newY] == initialColor){
-                // cout << newX << " " << newY << endl;
-                    q.push({newX,newY});
-                    image[newX][newY] = color;
-                }
+                int x = i + dx[k];
+                int y = j + dy[k];
+
+                if(check(x,y,m,n) && mat[x][y] == c){
+                    q.push({x,y});
+                    mat[x][y] = color;
+                } 
             }
-
         }
-        return image;
-
+        return mat;
     }
 };
