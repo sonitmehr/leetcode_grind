@@ -6,37 +6,37 @@
  *     TreeNode *right;
  *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
  *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left),
+ * right(right) {}
  * };
  */
 class Solution {
-
 public:
-   
-    TreeNode* buildTree(vector<int>& pre, vector<int>& in) {
+    TreeNode* solve(vector<int>& pre, vector<int>& in,
+                    unordered_map<int, int>& mp, int preStart, int preEnd,
+                    int inStart, int inEnd) {
 
-        return f(pre,0,pre.size(),in,0,in.size());
-    
-    }
+        if(preStart > preEnd || inStart > inEnd)return NULL;
 
-    TreeNode* f(vector<int>& pre,int i,int j,vector<int>& in,int ii,int jj)
-    {
-        //    8 4 5 3 7 3
-        //    8 [4 3 3 7] [5]
-        //      [3 3 4 7] 8 [5]
+        int newRoot = pre[preStart];
+        int ind = mp[newRoot];
+        int left = ind - inStart;
 
-       
-        if(i >= j || ii >= j)
-            return NULL;
+        TreeNode* root = new TreeNode(newRoot);
 
-        int mid = pre[i];
-        auto ind = find(in.begin() + ii,in.begin() + jj,mid);
+        root->left = solve(pre,in,mp,preStart + 1,preStart + left,inStart,ind - 1);
+        root->right = solve(pre,in,mp,preStart+left+1,preEnd,ind + 1,inEnd);
 
-        int dis = ind - in.begin() - ii;
-
-        TreeNode* root = new TreeNode(mid);
-        root -> left = f(pre,i + 1,i + 1 + dis,in,ii,ii + dis);
-        root -> right = f(pre,i + 1 + dis,j,in,ii + dis + 1,jj);
         return root;
+        
+    }
+    TreeNode* buildTree(vector<int>& pre, vector<int>& in) {
+        int n = pre.size();
+        unordered_map<int, int> mp;
+        for (int i = 0; i < n; i++) {
+            mp[in[i]] = i;
+        }
+
+        return solve(pre, in, mp,0,n - 1,0,n - 1);
     }
 };
