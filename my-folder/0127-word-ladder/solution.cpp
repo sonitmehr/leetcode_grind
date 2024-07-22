@@ -1,42 +1,43 @@
 #define pi pair<string,int>
 class Solution {
 public:
-    int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
+
+    int ladderLength(string s, string endWord, vector<string>& wordList) {
+
+        int n = s.size();
+        unordered_set<string> st(wordList.begin(),wordList.end());
         
         queue<pi> q;
-        unordered_set<string> st;
-        for(auto &i : wordList)st.insert(i);
-        q.push({beginWord,1});
-        int mini = 1e9;
+        int ans = 1e9;
+        q.push({s,1});
         while(!q.empty()){
-
             auto p = q.front();
             q.pop();
 
-            string currWord = p.first;
-            int length = p.second;
+            string word = p.first;
+            int dist = p.second;
 
-            if(currWord == endWord)mini = min(mini,length);
-
-            for(int k = 0;k<currWord.size();k++){
-                char ignore = currWord[k];
-
+            if(word == endWord){
+                ans = min(ans,dist);
+            }
+            for(int i = 0;i<n;i++){
+                char t = word[i];
                 for(char c = 'a';c<='z';c++){
-                    if(c != ignore){
-                        currWord[k] = c;
-                        if(st.find(currWord) != st.end()){
-                            q.push({currWord,length+1});
-                            st.erase(currWord);
+                    if(c != t){
+                        word[i] = c;
+                            // cout << word << endl;
+                        if(st.find(word) != st.end()){
+                            // cout << "Entered" << endl;
+                            q.push({word,dist + 1});
+                            st.erase(word);
                         }
+                        
                     }
-                    currWord[k] = ignore;
+                    word[i] = t;
                 }
             }
-
         }
-            return mini == 1e9 ? 0 : mini;
-        
-
+        return ans == 1e9 ? 0 : ans;
 
     }
 };
