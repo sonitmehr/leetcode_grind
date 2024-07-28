@@ -16,33 +16,34 @@ public:
         queue<pair<TreeNode*,int>> q;
 
         q.push({root,0});
-        long long ans = 0;
+        long long  ans = 0;
         while(!q.empty()){
-
             int sz = q.size();
-            long long mini = 1e9,maxi = -1e9;
+
             long long minus = q.front().second;
-            // cout << minus << endl;
+            long long mini = INT_MAX,maxi = INT_MIN;
             for(int k = 0;k<sz;k++){
+
                 auto p = q.front();
                 q.pop();
-                
-                TreeNode * node = p.first;
-                long long ind = p.second - minus;
-                
-                mini = min(mini,ind);
-                maxi = max(maxi,ind);
-                
-                if(node->left != NULL){
-                    q.push({node->left,2*ind + 1});
-                }
-                if(node->right != NULL){
-                    q.push({node->right,2*ind + 2});
-                }
 
+                auto node = p.first;
+                long long index = p.second - minus;
+                cout << index << endl;
+                mini = min(mini,index);
+                maxi = max(maxi,index);
+
+                if(node ->left != NULL){
+                    q.push({node->left,2*index + 1});
+                }
+                if(node ->right != NULL){
+                    q.push({node->right,2*index + 2});
+                }
             }
             ans = max(ans,maxi - mini + 1);
+
         }
         return ans;
+
     }
 };
