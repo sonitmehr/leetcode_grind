@@ -12,38 +12,19 @@
 class Solution {
 public:
 
-    int maxValue(TreeNode * root){
-        if(root == NULL)return INT_MIN;
+    bool solve(TreeNode* root,long long mini,long long maxi){
+        if(root == NULL)return true;
 
-        int value = root->val;
+        if(root->val <= mini || root->val >= maxi)return false;
 
-        int left = maxValue(root->left);
-        int right = maxValue(root->right);
+        bool left = solve(root->left,mini,root->val);
+        bool right = solve(root->right,root->val,maxi);
 
-        return max(value,max(left,right));
-    }
-    int minValue(TreeNode * root){
-        if(root == NULL)return INT_MAX;
-
-        int value = root->val;
-
-        int left = minValue(root->left);
-        int right = minValue(root->right);
-
-        return min(value,min(left,right));
+        if(left == false)return false;
+        return right;
     }
 
     bool isValidBST(TreeNode* root) {
-        
-        if(root == NULL)return true;
-        int val = root->val;
-        if(root->left != NULL && maxValue(root->left) >= val)return false;
-        if(root->right != NULL && minValue(root->right) <= val)return false;
-
-        if(!isValidBST(root->left)  || !isValidBST(root->right))return false;
-
-        return true;
-
-
+        return solve(root,LLONG_MIN,LLONG_MAX);
     }
 };
