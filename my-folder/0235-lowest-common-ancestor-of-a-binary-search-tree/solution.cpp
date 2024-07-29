@@ -10,17 +10,21 @@
 
 class Solution {
 public:
-    TreeNode * f(TreeNode* root, int p,int q){
-        if(root == NULL)return root;
-        int val = root->val;
-        
-        if(root->val < q && p > root->val) return f(root->right,p,q);
-        else if(root->val >q && root->val > p) return f(root->left,p,q);
-        return root;
-        
+
+    TreeNode* solve(TreeNode* root, TreeNode* p, TreeNode* q){
+        if(root==NULL)return NULL;
+
+        if(root== p || root == q)return root;
+
+        auto left = solve(root->left,p,q);
+        auto right = solve(root->right,p,q);
+
+        if(left && right )return root;
+        if(left)return left;
+        return right;
     }
+
     TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        
-        return f(root,p->val,q->val);
+        return solve(root,p,q);
     }
 };
