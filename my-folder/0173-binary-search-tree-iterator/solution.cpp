@@ -1,26 +1,57 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class BSTIterator {
 public:
-    stack<TreeNode*> s;
-    BSTIterator(TreeNode* root) {
-        partialInorder(root);
+    void inorder(TreeNode* root){
+        if(root==NULL)return;
+
+        inorder(root->left);
+        cout << root->val << " ";
+        inorder(root->right);
     }
-    
-    void partialInorder(TreeNode* root){
+    void insert(TreeNode* root,stack<TreeNode*> &st){
         while(root != NULL){
-            s.push(root);
-            root = root->left;
+            st.push(root);
+            cout << root->val <<endl;
+            root=root->left;
         }
+        cout << "end" << endl;
+    }
+
+    stack<TreeNode*>st;
+    BSTIterator(TreeNode* root) {
+        if(root == NULL)return;
+        // inorder(root);
+        // cout << endl;
+        insert(root,st);
     }
     
     int next() {
-        TreeNode* top = s.top();
-        s.pop();
-        partialInorder(top->right);
-        return top->val;
+
+        auto top = st.top();
+        int val = top->val;
+        cout << "top : ";
+        cout << val << endl;
+        st.pop();
+        if(top->right != NULL){
+            top = top->right;
+            insert(top,st);
+
+        }
+        return val;
     }
     
     bool hasNext() {
-        return !s.empty();
+        return !st.empty();
     }
 };
 
