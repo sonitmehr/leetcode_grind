@@ -5,20 +5,16 @@ public:
     bool valid(int i, int j,int n,int m){
         if(i < 0 || i >=n || j < 0 || j>=m)return false;
         return true;
-    }/*
-    [1,0,0],
-    [1,1,0],
-    [1,1,0]
-    */
+    }
     int shortestPathBinaryMatrix(vector<vector<int>>& mat) {
         int n = mat.size(),m = mat[0].size();
         vector<int> a = {-1,-1,-1,1,1,1,0,0}, b = {0,-1,1,0,-1,1,-1,1};
-        queue<pii> q;
+        priority_queue<pii,vector<pii>,greater<pii>> q;
         vector<vector<int>> dist(n,vector<int> (m,1e9));
         if(mat[0][0] == 1)return -1;
         q.push({1,{0,0}});
         while(!q.empty()){
-            auto p = q.front();
+            auto p = q.top();
             q.pop();
 
             int distance = p.first;
