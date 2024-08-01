@@ -11,21 +11,30 @@
  */
 class Solution {
 public:
-    
-    bool f(TreeNode * root,TreeNode * subRoot){
-        if(root == NULL && subRoot == NULL)return true;
-        if(root == NULL || subRoot == NULL)return false;
+
+    bool isSameTree(TreeNode* p,TreeNode* q){
+        if(p == NULL || q == NULL)return p == q;
+
+        bool left = isSameTree(p->left,q->left);
+        bool right = isSameTree(p->right,q->right);
         
-        
-        else if(root->val == subRoot->val){
-            return f(root->left,subRoot->left) && f(root->right,subRoot->right);
-        }
+
+        return p->val == q->val && left && right;
+    }
+
+    bool traverse(TreeNode* root, TreeNode* subRoot){
+        if(root == NULL)return false;
+
+        if(traverse(root->left,subRoot) == true)return true;
+
+        if(isSameTree(root,subRoot))return true;
+
+        if(traverse(root->right,subRoot) == true)return true;
+
         return false;
     }
-    
+
     bool isSubtree(TreeNode* root, TreeNode* subRoot) {
-        if(root == NULL)return false;
-        if(f(root,subRoot))return true;
-        return isSubtree(root->left,subRoot) || isSubtree(root->right,subRoot);
+        return traverse(root,subRoot);
     }
 };
