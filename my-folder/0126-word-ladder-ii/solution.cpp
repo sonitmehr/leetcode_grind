@@ -1,80 +1,85 @@
+
+#define pi pair<int,string> 
 class Solution {
 public:
-unordered_map<string,int> m;
-vector<vector<string>> ans;
-int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        unordered_set<string> st;
-        for(auto i : wordList)st.insert(i);
-        queue<pair<string,int>> q;
-        q.push({beginWord,1});
-        m[beginWord] = 1;
-        st.erase(beginWord); 
-        int mini = 1e9;
+    vector<vector<string>> ans;
+    void dfs(string &s,vector<string> &vec, unordered_map<string,int> &mp){
+        
+        int level = mp[s];
+
+        if(level == 1){
+            reverse(vec.begin(),vec.end());
+
+            ans.push_back(vec);
+            reverse(vec.begin(),vec.end());
+            return;
+        }
+
+        for(int i = 0;i<s.size();i++){
+            char ignore = s[i];
+            for(char c = 'a';c <= 'z';c++){
+                if(c != ignore){
+                    s[i] = c;
+                    cout << s << " " << level << " " << mp[s] + 1 << endl;
+                    if(mp.find(s) != mp.end() && mp[s] + 1 == level){
+                        cout << "Inside" << endl;
+                       vec.push_back(s);
+                       dfs(s,vec,mp);
+                       vec.pop_back();
+                    }
+                    s[i] = ignore;
+                }
+            }
+        }
+
+
+    }
+
+
+    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
+        unordered_set<string> st(wordList.begin(),wordList.end());
+        unordered_map<string,int> mp;
+        queue<pi> q;
+        q.push({1,beginWord});
+        st.erase(beginWord);
+        int mini = INT_MAX;
         while(!q.empty()){
             auto p = q.front();
             q.pop();
-            string currWord = p.first;
-            int length = p.second;
-            if(currWord == endWord){
-                mini =min(mini,length);
+
+            int steps = p.first;
+            string word = p.second;
+
+            if(word == endWord){
+                cout << steps << endl;
+                mini = steps;
                 break;
             }
-            for(int k = 0;k<currWord.size();k++){
-                char ignore = currWord[k];
-                char store = currWord[k];
+
+            for(int i = 0;i<word.size();i++){
+                char ignore = word[i];
                 for(char c = 'a';c <= 'z';c++){
                     if(c != ignore){
-                        
-                        currWord[k] = c;
-                        if(st.find(currWord) != st.end()){
-                            m[currWord] = length + 1;
-                            q.push({currWord,length + 1});
-                            st.erase(currWord);
+                        word[i] = c;
+                        if(st.find(word) != st.end()){
+                            mp[word] = steps + 1;
+                            q.push({steps + 1,word});
+                            st.erase(word);
                         }
-                        
                     }
                 }
-                currWord[k] = store;
+                        word[i] = ignore;
             }
-            
         }
-        //if(mini == 1e9)return 0;
-        return mini;
-        
-
-    }
-
-    void dfs(string s,vector<string> &v){
-        int level = m[s];
-        if(level == 1){
-            reverse(v.begin(),v.end());
-            ans.push_back(v);
-            reverse(v.begin(),v.end());
-            return;
+        for(auto &i : mp){
+            cout << i.first << " " << i.second << endl;
         }
-        for(int i = 0;i<s.size();i++){
-            char store = s[i];
-            for(char c = 'a';c<='z';c++){
-                s[i] = c;
-                if(m.find(s) != m.end() && m[s] + 1 == level){
-                    v.push_back(s);
-                    dfs(s,v);
-                    v.pop_back();
-                }
-            }
-            s[i] = store;
-        }
-    }
-
-    vector<vector<string>> findLadders(string beginWord, string endWord, vector<string>& wordList) {
-        int mini= ladderLength(beginWord,endWord,wordList);
-        // for(auto i : m){
-        //     cout << i.first <<  " " << i.second << endl;
-        //  }
-        vector<string> v;
-        v.push_back(endWord);
-        dfs(endWord,v);
-
+        cout << endl;
+        vector<string> vec;
+        mp[endWord] = mini;
+        mp[beginWord] = 1;
+        vec.push_back(endWord);
+        dfs(endWord,vec,mp);
         return ans;
     }
 };
