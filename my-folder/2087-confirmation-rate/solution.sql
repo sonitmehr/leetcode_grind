@@ -1,7 +1,9 @@
 # Write your MySQL query statement below
-SELECT s.user_id, ROUND(AVG( if (c.action = 'confirmed',1,0)),2) as confirmation_rate
-FROM Signups s
+Select s.user_id
+, ROUND(avg(if(c.action = 'timeout' or c.action is NULL,0,1)),2) as confirmation_rate
+
+from Signups s
 LEFT JOIN Confirmations c
-ON s.user_id=c.user_id
+ON s.user_id = c.user_id
 GROUP BY s.user_id
 
