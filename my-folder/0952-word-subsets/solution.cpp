@@ -1,48 +1,45 @@
 class Solution {
 public:
-    
-    vector<int> f(string s){
-        vector<int> v(26,0);
-        int n = s.size();
-        
+    vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
+        int n = words1.size();
+        int m = words2.size();
+
+        vector<unordered_map<char,int>> vec1(n);
+        unordered_map<char,int> mp2;
+
         for(int i = 0;i<n;i++){
-            v[s[i] - 'a']++;
-        }
-        return v;
-    }
-    
-    vector<string> wordSubsets(vector<string>& s1, vector<string>& s2) {
-        int n1 = s1.size();
-        int n2 = s2.size();
-        
-        vector<int> vmax(26,0);
-        for(auto x:s2){
-            vector<int> temp=f(x);
-            for(int i=0;i<26;i++){
-                vmax[i]=max(vmax[i],temp[i]);
+            for(char &c : words1[i]){
+                vec1[i][c]++;
             }
         }
-        
-        for(int i=0;i<26;i++){
-            cout<<i+ 'a' <<" "<<vmax[i]<<endl;
+        for(int i = 0;i<m;i++){
+        unordered_map<char,int> temp;
+
+            for(char &c : words2[i]){
+                // mp2[c]++;
+                temp[c]++;
+                mp2[c] = max(mp2[c],temp[c]);
+            }
         }
-        cout<<endl;
-        
-       // vector<int> occ(26,0);
-        vector<int> occ2;
-        
-        vector<string> ans; 
-        for(auto i : s1){
-            occ2 = f(i);
-            int flag = 1;
-            for(int j =0; j < 26; j++){
-                if(vmax[j] > occ2[j]){
-                    flag = 0;
+        int ind = 0;
+        vector<string> ans;
+        for(auto &mp1 : vec1){
+            bool check = true;
+            // cout << words1[ind] << endl;
+
+            for(auto &i : mp2){
+                // cout << i.first << " " << i.second << endl;
+                // cout << mp1[i.first] << " " << mp2[i.first] << endl;
+                if(mp1[i.first] < mp2[i.first]){
+                    check = false;
                     break;
                 }
             }
-            if(flag)ans.push_back(i);
-            //occ2.clear();
+            // cout << "check : " << check << endl; 
+            if(check){
+                ans.push_back(words1[ind]);
+            }
+            ind ++;
         }
         return ans;
     }
